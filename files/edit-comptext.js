@@ -52,10 +52,12 @@ CompEditTextWidget.prototype.popupHide = function( popup ) {
 /*
 Inner function : find the best matches
 */
-CompEditTextWidget.prototype.bestChoice = function( pattern, nbMax=2) {
+CompEditTextWidget.prototype.bestChoice = function( pattern, nbMax) {
     var allTidTitles = $tw.wiki.getTiddlers(); /*wiki.js*/
     var bestStr = "";
     var nbBest = 0;
+   // nbMax set to 2 if no value given
+    nbMax = nbMax !== undefined ? nbMax : 2;
 
     this._bestChoices = [];
     for( var i=0; i<allTidTitles.length; i++ ) {
