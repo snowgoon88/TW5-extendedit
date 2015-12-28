@@ -54,8 +54,10 @@ var properties = [
   'MozTabSize'
 
 ];
-
-var isFirefox = window.mozInnerScreenX != null;
+var isFirefox = false;
+if($tw.browser) {
+    isFirefox = window.mozInnerScreenX != null;
+}
 
 function getCaretCoordinates(element, position, options) {
 
@@ -71,7 +73,14 @@ function getCaretCoordinates(element, position, options) {
   document.body.appendChild(div);
 
   var style = div.style;
-  var computed = window.getComputedStyle? getComputedStyle(element) : element.currentStyle;  // currentStyle for IE < 9
+  var computed;
+  if($tw.browser) {
+      computed = window.getComputedStyle? getComputedStyle(element) : element.currentStyle;  // currentStyle for IE < 9
+  } 
+  else {
+      computed = element.currentStyle;
+  }
+    
 
   // default textarea styles
   style.whiteSpace = 'pre-wrap';

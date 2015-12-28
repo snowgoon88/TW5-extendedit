@@ -1,9 +1,10 @@
 {
-	"title": "$:/plugins/snowgoon88/TW5-extendedit",
+	"title": "$:/plugins/snowgoon88/edit-comptext",
 	"description": "Editor with some on-line completion capabilities",
 	"author": "AlainD",
-	"version": "0.0.1",
+	"version": "1.0",
 	"core-version": ">=5.0.8",
 	"source": "https://github.com/snowgoon88/TW5-extendedit",
-	"plugin-type": "plugin"
+	"plugin-type": "plugin",
+	"list": "readme"
 }

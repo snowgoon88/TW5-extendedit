@@ -1,0 +1,12 @@
+{
+	"tiddlers": [
+		{
+			"file": "cursor-position.js",
+			"fields": {
+				  "type": "application/javascript",
+				  "title": "$:/plugins/snowgoon88/edit-comptext/cursor-position.js",
+				  "module-type": "library"
+			}
+		}
+	]
+}

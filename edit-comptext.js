@@ -1,5 +1,5 @@
 /*\
-title: $:/core/modules/widgets/compedit-text.js
+title: $:/plugins/snowgoon88/edit-comptext/edit-comptext.js
 type: application/javascript
 module-type: widget
 
@@ -18,7 +18,7 @@ var DEFAULT_MIN_TEXT_AREA_HEIGHT = "100px"; // Minimum height of textareas in pi
     
 var Widget = require("$:/core/modules/widgets/widget.js").widget;
 // to compute pixel coordinates of cursor
-var getCaretCoordinates = require("$:/_snowgoon88/lib/cursor_position.js");
+var getCaretCoordinates = require("$:/plugins/snowgoon88/edit-comptext/cursor-position.js");
 
 var CompEditTextWidget = function(parseTreeNode,options) {
 	this.initialise(parseTreeNode,options);
