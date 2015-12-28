@@ -7,6 +7,10 @@ Plugin to extend the editor of TiddlyWiki5 with 'link completion'.
 
 **Upload it** from http://snowgoon88.github.io/TW5-extendedit
 
+**Config** Then, in `$:/ControlPanel -> Advanced -> Editor Type -> text/vnd.tiddlywiki` you must chose **comptext** instead of **text**.
+
+Reload and « voilà »...
+
 **Dev**
 * The `edit-comptextdemo` directory should be copied/linked into `$TW5HOME/editions` directory
 * Then in `$TW5HOME`, run `nodejs ./tiddlywiki.js editions/edit-comptextdemo --build index` to create a stand alone `edit-comptextdemo.html` demo in `$TW5HOME/editions/edit-comptextdemo/output`
