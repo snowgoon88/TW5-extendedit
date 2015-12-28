@@ -118,6 +118,8 @@ Error message and password prompt
 
 <p>This <a class="tc-tiddlylink-external" href="http://tiddlywiki.com" target="_blank">TiddlyWiki</a> contains the following tiddlers:</p><p><ul>
 
+<li>$:/config/EditorTypeMappings/text/vnd.tiddlywiki</li>
+
 <li>$:/core</li>
 
 <li>$:/DefaultTiddlers</li>
@@ -129,6 +131,10 @@ Error message and password prompt
 <li>$:/SiteSubtitle</li>
 
 <li>$:/SiteTitle</li>
+
+<li>$:/state/tab--2112689675</li>
+
+<li>$:/state/tab--959111941</li>
 
 <li>$:/StoryList</li>
 
@@ -166,6 +172,9 @@ Error message and password prompt
 <!--~~ Ordinary tiddlers ~~-->
 
 <div id="storeArea" style="display:none;">
+<div created="20151228182354463" modified="20151228182356641" title="$:/config/EditorTypeMappings/text/vnd.tiddlywiki">
+<pre>comptext</pre>
+</div>
 <div author="JeremyRuston" core-version="&gt;=5.0.0" dependents="" description="TiddlyWiki5 core" list="readme" plugin-priority="0" plugin-type="plugin" title="$:/core" type="application/json" version="5.1.10-prerelease">
 <pre>{
     &quot;tiddlers&quot;: {
@@ -6277,7 +6286,13 @@ Error message and password prompt
 <div title="$:/SiteTitle">
 <pre>Edit-~CompText Demo</pre>
 </div>
-<div list="[[About the Edit-CompText plugin]] [[Under the hood]]" title="$:/StoryList">
+<div created="20151228182344681" modified="20151228182344681" title="$:/state/tab--2112689675">
+<pre>$:/core/ui/ControlPanel/Advanced</pre>
+</div>
+<div created="20151228182346294" modified="20151228182346294" title="$:/state/tab--959111941">
+<pre>$:/core/ui/ControlPanel/EditorTypes</pre>
+</div>
+<div list="$:/ControlPanel [[About the Edit-CompText plugin]] [[Under the hood]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -6285,11 +6300,11 @@ Error message and password prompt
     &quot;tiddlers&quot;: {
         &quot;$:/info/browser&quot;: {
             &quot;title&quot;: &quot;$:/info/browser&quot;,
-            &quot;text&quot;: &quot;no&quot;
+            &quot;text&quot;: &quot;yes&quot;
         },
         &quot;$:/info/node&quot;: {
             &quot;title&quot;: &quot;$:/info/node&quot;,
-            &quot;text&quot;: &quot;yes&quot;
+            &quot;text&quot;: &quot;no&quot;
         }
     }
 }</pre>
@@ -6399,7 +6414,7 @@ Error message and password prompt
     }
 }</pre>
 </div>
-<div created="20151228131333993" modified="20151228131402134" title="About the Edit-CompText plugin">
+<div created="20151228131333993" modified="20151228182639198" title="About the Edit-CompText plugin">
 <pre>In editarea of the 'text' field, two '[' in a row enter the ''completion mode'' and any subsequent alphanumeric character suggest completion possibilities in overlay.
 
 * ENTER, when only one possible completion, completes the link
@@ -6412,7 +6427,12 @@ FYI, a list of already created tiddlers :     hisOne, hisTwo, myOne, myTwo, myTh
 
 To add the plugin to your own TiddlyWiki5, just drag this link to the browser window:
 
-[[$:/plugins/snowgoon88/edit-comptext]]</pre>
+[[$:/plugins/snowgoon88/edit-comptext]]
+
+Then, in $:/ControlPanel -&gt; Advanced -&gt; Editor Type -&gt; text/vnd.tiddlywiki
+you must chose ''comptext'' instead of ''text''.
+
+Reload and « voilà »...</pre>
 </div>
 <div tags="" title="hisFive">
 <pre></pre>
