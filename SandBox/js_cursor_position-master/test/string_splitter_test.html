@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  <script src="prototype.js" type="text/javascript"></script>
+  <script src="unittest.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="test.css" type="text/css"/>
+
+  <script src="../src/string_splitter.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div id="content">
+
+  <div id="header">
+    <h1>JavaScript unit test file</h1>
+  </div>
+
+  <!-- Log output -->
+  <div id="testlog"></div>
+
+</div>
+
+
+<script type="text/javascript">
+  // <![CDATA[
+
+  new Test.Unit.Runner({
+
+    // replace this with your real tests
+
+    setup: function() {
+      with (this) {
+        this.splitter = new maxkir.StringSplitter(function(s) {
+          return s.length * 2;
+        });
+      }
+    },
+
+    teardown: function() {
+      with (this) {
+      }
+    },
+
+    testNothingToSplit: function() {
+      with (this) {
+        assertEnumEqual([""], this.splitter.splitString("", 1));
+        assertEnumEqual(["a"], this.splitter.splitString("a", 1));
+        assertEnumEqual(["a"], this.splitter.splitString("a", 2));
+        assertEnumEqual(["a"], this.splitter.splitString("a", 3));
+      }
+    },
+
+    testSplitSimple_2: function() {
+      with (this) {
+        assertEnumEqual(["a ", "b"], this.splitter.splitString("a b", 1));
+        assertEnumEqual(["a ", "b"], this.splitter.splitString("a b", 2));
+        assertEnumEqual(["a ", "b"], this.splitter.splitString("a b", 3));
+        assertEnumEqual(["a ", "b"], this.splitter.splitString("a b", 4));
+        assertEnumEqual(["a ", "b"], this.splitter.splitString("a b", 5));
+        assertEnumEqual(["a b"], this.splitter.splitString("a b", 6));
+      }
+    },
+
+    testSplitSimple_3: function() {
+      with (this) {
+        assertEnumEqual(["5a ", "bb ", "cc"], this.splitter.splitString("5a bb cc", 1));
+        assertEnumEqual(["6a bb ", "cc"], this.splitter.splitString("6a bb cc", 10));
+        assertEnumEqual(["1a ", "bb "], this.splitter.splitString("1a bb ", 6));
+        assertEnumEqual(["2a ", "bb "], this.splitter.splitString("2a bb ", 7));
+        assertEnumEqual(["3a ", "bb "], this.splitter.splitString("3a bb ", 8));
+        assertEnumEqual(["4a bb "], this.splitter.splitString("4a bb ", 10));
+      }
+    },
+
+    testLineFeed: function() {
+      with (this) {
+        assertEnumEqual(["a\n", "b\n", "c"], this.splitter.splitString("a\nb\nc", 0));
+      }
+    },
+
+
+    f: null
+  }, "testlog");
+  // ]]>
+</script>
+
+<div id="treeDebug"></div>
+
+
+</body>
+</html>

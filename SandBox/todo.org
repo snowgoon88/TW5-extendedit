@@ -1,0 +1,63 @@
+* Question
+===========
+** quand `Widget.prototype.refresh` est-il appelé ?
+*** => pk `learn.prototype.render` ne s'adapte pas quand la liste des Tiddler change ?
+**** Peu-être faut-il appeler `....prototype.refreshSelf()` ?
+
+* Todo
+======
+** DONE Cloner `edit-text.js` => `compedit-text.js`
+** DONE En s'inspirant de code mirror, en faire un éditeur pour un type de tiddler
+The current editor type mappings are shown in [[$:/ControlPanel]] under the "Advanced" tab.
+** DONE Essayer d'y loguer les events clavier
+*** $tw.utils.addEventListeners(domNode, {name: "keyup", handlerObject: this, handlerMethod: "handleKeyupEvent"}
+*** CompEditTextWidget.prototype.handleKeyupEvent
+** DONE Faire marcher la machine a états de Sandbox
+** TODO Attention, les variables _state, _pattern et autre doivent être liée au Tiddler
+et pas à la classe qui modifie
+** DONE [0/1] Gérer la recherche des liens
+Dans CETW.prototype.bestChoice, mais à chaque appel on reconstruit la liste de tous les Tiddlers.
+*** TODO Pourrait ne pas reconstruire à chaque appel ?
+** DONE [2/2] Popup window ??
+*** DONE Comment réutiliser un package ?
+**** Différent si plugin ou pas plugin
+**** D'abord essayer en mettant le fichier .js dans un tiddler sous $:/_snowgoon88/lib/truc.js
+***** considère que c'est un module de node.js.
+> exports.truc = ... 
+// pour que truc soit ensuite disponible 
+> var bidule = require("../truc.js");
+> bidule.truc
+***** Immediately Invoked Anonymous Function
+The syntax
+
+(function(){...})();
+
+is simply an immediately invoked anonymous function. It does not matter how you use your brackets, as the underlying code is a function being declared, and invoked.
+***** DONE Faut transformer les libraries en modules
+textarea-caret-position fait le job en exportant.
+https://github.com/component/textarea-caret-position
+*** DONE Comment nommer notre popup ? 
+pas besoin, on la met dans une variables locale (mais UGLY)
+** Utiliser un PATTERN qui commencer par * pour lancer une recherche 'intelligente' dans les titres de Tiddlers
+** Dans les autres champs que le field.text (titre, etc...)
+
+
+* Plugin EditText (CodeEdit)
+==========================
+Abréviation utiliséé par moi : XXX <- truc' veut dire que XXX est ''mon'' raccourci local pour truc.
+
+ECMW <- `EditCodeMirrorWidget`
+
+** cm <- `window.CodeMirror = require("...plugins/...codemirror.js");`
+** comment les `event clavier` peuvent-ils être transmis, reçu ?
+*** dans `ECMW.prototype.render`, crèe un `this.codeMirrorInstance` qui est une fonction de `cm`
+*** Ajoute un event handler dans `cm.on` pour appeler `saveChanges(cm.getValue())`
+**** ''Q'' : `getValue` ?
+**** ''Q'' : on( "event", function() ) est intégré à chaque ''node'' d'un DOM ??
+*** `saveChanges = function( text )` qui appelle `this.getEditInfo().update(text)` si `this.getEditInfo()` est différent de `text`
+*** `getEditInfo()` fonction qui renvoie un dictionnaire composé de 3 champs
+**** `value` : valeur du champ à éditer
+**** `type` : type de champ (ex "text/vnd.tiddlywiki")
+**** `update()` : fonction qui ajoute appelle `.wiki.addTiddler( new $tw.Tiddler( wiki.getCreationFields(), tiddler, updateFields, wiki.getModificationFields())`
+***** ''Q'' : .wiki.addTiddler ?
+***** ''Q'' : $tw.Tiddler ?

@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title></title>
+  <script type="text/javascript" src="prototype.js"></script>
+  <script type="text/javascript" src="../src/selection_range.js"></script>
+  <script type="text/javascript" src="../src/string_splitter.js"></script>
+  <script type="text/javascript" src="../src/cursor_position.js"></script>
+
+  <script type="text/javascript">
+
+    window.onload = function() {
+      var positioner1 = new maxkir.CursorPosition($('text_area'), 7);
+      $('text_area').observe("click", function(e) {
+        var child_pos = positioner1.getPixelCoordinates();
+//        alert(positioner1.getCursorCoordinates())
+        var t_pos = $('text_area').cumulativeOffset(); 
+        $('pointer').style.left = (t_pos.left + child_pos[0]) + "px";
+        $('pointer').style.top = (t_pos.top + child_pos[1]) + "px";
+      });
+      var positioner2 = new maxkir.CursorPosition($('text_field'), 7);
+      $('text_field').observe("click", function(e) {
+        var child_pos = positioner2.getPixelCoordinates();
+        var t_pos = $('text_field').cumulativeOffset();
+        $('pointer').style.left = (t_pos.left + child_pos[0]) + "px";
+        $('pointer').style.top = (t_pos.top + child_pos[1]) + "px";
+      });
+    }
+
+  </script>
+</head>
+<body>
+
+
+  <h2>Click into the textarea below. The red square should follow the place of the click</h2>
+
+
+<div id="pointer" style="position: absolute; width: 3px; height: 3px; background-color: red"></div>
+
+<textarea rows="5" cols="90" id="text_area" style="font-family: Courier,monospace; font-size: 8px;
+font-weight: bold; font-style: italic; line-height: 3; padding: 7px;">
+  Lorem ipsum dolor sit amet, consetetur
+  sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+  At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
+  Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr,  sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr,  sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+</textarea>
+
+  <br/>
+
+  <input type="text" id="text_field" size="90" value="sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.">
+</body>
+</html>

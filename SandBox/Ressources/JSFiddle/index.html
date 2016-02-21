@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+</head>  
+
+<body>
+  <!-- Include javascript -->
+  <script type="text/javascript" src="prototype.js"></script>
+  <script type="text/javascript" src="selection_range.js"></script>
+  <script type="text/javascript" src="string_splitter.js"></script>
+  <script type="text/javascript" src="cursor_position.js"></script>
+
+  <!-- Main javascript -->
+  <script type="text/javascript" src="sandbox.js"></script>
+
+  <!-- Used for poping up suggestion -->
+  <div name="popup" id="id_popup" 
+       style="border:1px solid gray; display:none; position: absolute; background-color:white; color:blue;">suggestion de lien</div>
+
+
+  <!-- Explanation -->
+  <div name="help" id="id_help">
+    <h3>Help</h3>
+    <p>Two '[' in a row enter the 'completion mode' and any subsequent <b>alphanumeric</b> character suggest completion possibilities in overelay.</p> 
+    <ul>
+      <li> ENTER, when only one possible completion, completes the link</li>
+      <li> ENTER, when more than one possible completion, takes you out of completion mode.</li>
+      <li> BACKSPACE, DEL, ARROWS takes you out of completion mode</li>
+    </ul>
+    <p>Hardwire linked are : myLink', 'myLore', 'myStuff', 'other </p>
+  </div>
+
+  <!-- Text area -->
+  <textarea name="sandbox" id="id_sandbox" rows="15" cols="70"
+	    onKeyUp="keyCbk(event,this);"
+	    onInput="inputCbk(event,this);">
+Some randome text on multiples lines
+that can be edited and where you can
+add 'TW' links....
+  </textarea>
+
+  <!-- Help / Howto -->
+  <div name="next" id="id_next">
+    <h3>Questions / Improvements</h3>
+    <ul>
+      <li><span style="color:green">DONE</span> why is the popup transparent ?? => added 'background-color'</li>
+      <li>less dependency for getting position of cursor (using <a href="https://github.com/kir/js_cursor_position">cursor_position</a> lib</li>
+      <li>how to integrate as a TW plugin ?</li>
+    </ul>
+  </div>
+
+</body>
+
+</html>
+
+

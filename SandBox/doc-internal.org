@@ -1,0 +1,147 @@
+* TODO Essayer Edit-CompText à la place de l'input de title :o)
+** => Marche pas car ENTER est pas pris en compte
+** => Dans edit-field la fenètre s'affiche n'importe où...
+* TODO Regarder comment marche 'search'
+** PB : intercepter les touches UP,DOWN
+** PB : gérer le pattern qui sert à rechercher
+** => faut quand même faire un Widget assez spécial je pense, non ??
+* DONE inspiration
+** list.js : ouvre des sub-widget (ListItems)
+** reveal => PopupMechanism
+** ActionSetFieldWidget : pour ajouter de nouveaux Fields
+* sidebar search
+** CSS
+<div class="tc-sidebar-lists">
+  <p>
+    <div class="tc-search">
+      <input type="search"></input> + evt( focus, input )
+      + bouton invisibles (advanced, close)
+    </div>
+  </p>
+  <div class="tc-reveal">
+    <p>
+      <div class="tc-search-results">
+        <p>
+          <p><em><small>3 matches</small><em></p>
+          <p><em><small>Titles matches:</small></em></p>
+          <div class="tc-menu-list-item">
+            <a class="tc-tiddlylink tc-tiddlylink-resolves" href="#myFor">myFor</a> + evt( click, dragend, dragstart)
+          </div>
+	  + other types of matches
+** Comment ça marche
+Dans core/ui/SideBarLists.tid, on déclare un input (avec <$edit-text tiddler="$:/temp/search") qui modifie donc $:/temp/search. Ce tiddler est ensuite utilisé dans $:/core/ui/SearchResults qui appelle $:/core/ui/DefaultSearchResultList où on fait une liste des résultats de la recherche avec 
+<$list filter="[!is[system]search:title{$(searchTiddler)$}sort[title]limit[250]]" template="$:/core/ui/ListItemTemplate"/>
+*** PB
+**** <$list filter="[!i... ne marche pas en "temps réél"
+Quand j'inclue ce qui suit dans un tiddlers, ça me fait comme si $:/temp/search était empty. Ou en fait qu'il est construit statiquement et qu'il ne va pas relire $:/temp/search
+=> Mais ca marche si on passe par une <<macro>>
+\define searchResultList()
+<$set name="resultCount" value="""<$count filter="[!is[system]search{$(searchTiddler)$}]"/>""">
+
+{{$:/language/Search/Matches}}
+
+</$set>
+
+//<small>Title matches:</small>//
+
+<$list filter="[!is[system]search:title{$(searchTiddler)$}sort[title]limit[250]]" template="$:/core/ui/ListItemTemplate"/>
+
+\end
+
+Mon truc : marche pas
+
+<$set name="searchTiddler" value="$:/temp/search">
+<$list filter="[!is[system]search:title[myFo]sort[title]limit[250]]" template="$:/core/ui/ListItemTemplate"/>
+</$set>
+
+Search Results : marche !
+<$set name="searchTiddler" value="$:/temp/search">
+<<searchResultList>>
+</$set>
+
+**** 
+* edit : title
+** CSS
+<section class="tc-story-river">
+  <div class="tc-tiddler-frame tc-tiddler-edit-frame" ...>
+    <div class=" tc-keyboard"> + evt (keydown)
+      <div class=" tc-keyboard"> + evt (keydown)
+        <div class="tc-tiddler-title tc-tiddler-edit-title">
+          <input class="tc-titlebar tc-edit-texteditor" type="text"></input> + evt (focus, input)
+* edit : field-add-value
+** CSS
+<section class="tc-story-river">
+  <div class="tc-tiddler-frame tc-tiddler-edit-frame" ...>
+    <div class=" tc-keyboard"> + evt (keydown)
+      <div class=" tc-keyboard"> + evt (keydown)
+        <div class="tc-edit-field-add">
+          <span class="tc-edit-field-add-value">
+            <input class="tc-edit-texteditor" placeholder="field value"></input> + evt (focus, input)
+* edit : field value
+** CSS
+<section class="tc-story-river">
+  <div class="tc-tiddler-frame tc-tiddler-edit-frame" ...>
+    <div class=" tc-keyboard"> + evt (keydown)
+      <div class=" tc-keyboard"> + evt (keydown)
+        <div class="tc-edit-fields">
+          <tbody>
+            <tr class="tc-edit-field">
+              <td class="tc-edit-field-value">
+                <input type="text"></input> + evt(focus,input)
+* dropdown menu field-add-name
+** CSS
+<section class="tc-story-river">
+  <div class="tc-tiddler-frame tc-tiddler-edit-frame" ...>
+    <div class=" tc-keyboard"> + evt (keydown)
+      <div class=" tc-keyboard"> + evt (keydown)
+        <div class="tc-edit-field-add">
+	  <span class=" tc-reveal">
+            <div class="tc-block-dropdown tc-edit-type-dropdown">
+              <div class="tc-dropdown-item">User fields</div>
+                <a class="tc-tiddlylink tc-tiddlylink-missing" href="#myfield">myfield</a> + evt( click, dragend, dragstart)
+* myOwnMenu for Edit-CompText
+** CSS
+<section class="tc-story-river">
+  <div class="tc-tiddler-frame tc-tiddler-edit-frame" ...>
+    <div class=" tc-keyboard"> + evt (keydown)
+      <div class=" tc-keyboard"> + evt (keydown)
+        <div class=" tc-reveal">
+          <p>
+            <textarea class="tc-edit-texteditor" ... > text </textarea>
+            <div class="popup_comptext" style="border: ... ">
+              myFive<br></br>
+              myFor<br></br>
+              ...
+            </div>
+          </p>
+* Where to find CSS
+** tc-search
+*** core/ui/SideBarLists.tid:<div class="tc-search">
+*** themes/tiddlywiki/vanilla/base.tid:.tc-search a svg {
+*** themes/tiddlywiki/vanilla/base.tid:.tc-search button svg, .tc-search a svg {
+*** themes/tiddlywiki/vanilla/base.tid:.tc-search button:hover svg, .tc-search a:hover svg {
+** tc-search-results
+*** core/ui/SearchResults.tid:<div class="tc-search-results">
+
+** tc-block-dropdown
+*** core/ui/EditTemplate/fields.tid:<div class="tc-block-dropdown tc-edit-type-dropdown">
+*** themes/tiddlywiki/vanilla/base.tid:.tc-block-dropdown {
+*** themes/tiddlywiki/vanilla/base.tid:.tc-block-dropdown a {
+*** themes/tiddlywiki/vanilla/base.tid:.tc-block-dropdown .tc-dropdown-item {
+*** themes/tiddlywiki/vanilla/base.tid:.tc-block-dropdown a:hover {
+** tc-tiddlylink
+*** core/modules/widgets/link.js:	classes.push("tc-tiddlylink");
+*** themes/tiddlywiki/vanilla/base.tid:.tc-edit-type-dropdown a.tc-tiddlylink-missing {
+*** themes/tiddlywiki/vanilla/base.tid:a.tc-tiddlylink:hover {
+** tc-reveal
+*** core/modules/widgets/reveal.js:	classes.push("tc-reveal");
+** tc-keyboard
+*** core/modules/widgets/keyboard.js:	classes.push("tc-keyboard");
+** tc-edit-texteditor
+*** core/ui/EditTemplate/body.tid:<$edit field="text" class="tc-edit-texteditor" placeholder={{$:/language/EditTemplate/Body/Placeholder}}/>
+*** core/ui/EditTemplate/title.tid:<$edit-text field="draft.title" class="tc-titlebar tc-edit-texteditor" focus="true"/>
+*** core/ui/EditTemplate/fields.tid:<$edit-text tiddler="$:/temp/newfieldname" tag="input" default="" placeholder={{$:/language/EditTemplate/Fields/Add/Name/Placeholder}} focusPopup=<<qualify "$:/state/popup/field-dropdown">> class="tc-edit-texteditor tc-popup-handle"/>
+*** core/ui/EditTemplate/fields.tid:<$edit-text tiddler="$:/temp/newfieldvalue" tag="input" default="" placeholder={{$:/language/EditTemplate/Fields/Add/Value/Placeholder}} class="tc-edit-texteditor"/>
+*** themes/tiddlywiki/vanilla/base.tid:.tc-tiddler-frame input.tc-edit-texteditor, .tc-tiddler-frame textarea.tc-edit-texteditor {
+*** themes/tiddlywiki/vanilla/base.tid:.tc-tiddler-frame input.tc-edit-texteditor {
+
