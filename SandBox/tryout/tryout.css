@@ -1,0 +1,23 @@
+/*
+ * tag #id .class
+ * group using ','
+ *
+ * Combinators
+ *   - descendant selector (space)
+ *   - child selector (>)
+ *   - adjacent sibling selector (+)
+ *   general sibling selector (~)
+ *
+ * Attr Selection
+ * [attribute] : elements with a specified attribute.
+ * [attribute="value"] : elements with a specified attribute and value.
+ */
+
+li[patt-selected="true"] {
+    background: hsl(205, 40%, 40%);
+    color: white;
+}
+li[patt-selected="true"] mark {
+    background: hsl(86, 100%, 21%);
+    color: inherit;
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Version de Travail</title>
+  <!-- CSS -->
+  <link rel="stylesheet" href="tryout.css" />
+  <!-- Include javascript -->
+  <script type="text/javascript" src="tryout.js"></script>
+</head>  
+
+<body>
+  <div>
+    <h3>Entrée</h3>
+    <textarea id="entree" rows="15" cols="70" 
+	      onKeyUp="handleKeyupEvent(event);" 
+	      onKeyDown="handleKeydownEvent(event);" 
+	      onInput="handleInputEvent(event);">
+      
+    </textarea>
+  </div>
+  
+  <div>
+    <h3>Pattern</h3>
+    <div id="pattern">
+    </div>
+  </div> 
+
+  <div>
+    <h3>Regexp</h3>
+    <div id="regexp">
+    </div>
+  </div> 
+
+
+  <div>
+    <h3>List</h3>
+    <div id="l_choice">
+    </div>
+  </div> 
+
+</body>
+
+</html>
+
+
