@@ -6,6 +6,10 @@
 
 * Todo
 ======
+** DONE Tester AwesomeComplete dans editarea => Marche pas
+*** En plus, pas de positionnement.
+*** Ptêt des idées de CSS / JS à creuser.
+*** Controler quand le Popup (ie open(), evaluate()) est appelé.
 ** DONE Cloner `edit-text.js` => `compedit-text.js`
 ** DONE En s'inspirant de code mirror, en faire un éditeur pour un type de tiddler
 The current editor type mappings are shown in [[$:/ControlPanel]] under the "Advanced" tab.
@@ -38,9 +42,10 @@ textarea-caret-position fait le job en exportant.
 https://github.com/component/textarea-caret-position
 *** DONE Comment nommer notre popup ? 
 pas besoin, on la met dans une variables locale (mais UGLY)
-** Utiliser un PATTERN qui commencer par * pour lancer une recherche 'intelligente' dans les titres de Tiddlers
-** Dans les autres champs que le field.text (titre, etc...)
+** TODO Utiliser un PATTERN qui commencer par * pour lancer une recherche 'intelligente' dans les titres de Tiddlers
+** TODO Dans les autres champs que le field.text (titre, etc...)
 
+** DONE Utiliser les UP,DOWN pour naviguer dans la liste => tryout
 
 * Plugin EditText (CodeEdit)
 ==========================
