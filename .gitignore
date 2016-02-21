@@ -1,0 +1,4 @@
+# ignore build object and library and depency
+\#*
+*~
+*.zip
