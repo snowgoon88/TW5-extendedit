@@ -25,6 +25,7 @@ var CompEditTextWidget = function(parseTreeNode,options) {
   	// Internal variables
   	this._nbSquareParen = 0;
   	this._pattern = "";
+        this._startPos = -1; // Position where pattern starts
 	this._state = "VOID";
 	this._bestChoices = [];
 };
@@ -54,6 +55,8 @@ Inner function : find the best matches
 */
 CompEditTextWidget.prototype.bestChoice = function( pattern, nbMax) {
     var allTidTitles = $tw.wiki.getTiddlers(); /*wiki.js*/
+    // regexp search pattern, case sensitive
+    var regpat = RegExp( $tw.utils.escapeRegExp(pattern) );
     var bestStr = "";
     var nbBest = 0;
    // nbMax set to 2 if no value given
@@ -61,19 +64,20 @@ CompEditTextWidget.prototype.bestChoice = function( pattern, nbMax) {
 
     this._bestChoices = [];
     for( var i=0; i<allTidTitles.length; i++ ) {
-	    //console.log( "SW "+choices[i]+ " w "+pattern +" ?" );
-		if ( allTidTitles[i].startsWith( pattern ) ) {
-	        //console.log( "SW => YES");
-	    	if (nbBest == nbMax) {
-				bestStr += "...";
-				this._bestChoices.push( "..." );
-				return bestStr;
-	    	} else {
-				bestStr += allTidTitles[i] + "<br />";
-				this._bestChoices.push( allTidTitles[i] );
-				nbBest += 1;
-	    	}
-        }
+	//console.log( "SW "+allTidTitles[i]+ " w "+pattern +" ?" );
+	//regexg if ( allTidTitles[i].startsWith( pattern ) ) {
+	if( regpat.test(allTidTitles[i]) ) {
+	    //console.log( "SW => YES");
+	    if (nbBest == nbMax) {
+		bestStr += "...";
+		this._bestChoices.push( "..." );
+		return bestStr;
+	    } else {
+		bestStr += allTidTitles[i] + "<br />";
+		this._bestChoices.push( allTidTitles[i] );
+		nbBest += 1;
+	    }
+	}
     }
     return bestStr;
 };
@@ -324,6 +328,7 @@ CompEditTextWidget.prototype.handleInputEvent = function(event) {
 	    //console.log( "state switch to PATTERN" );
 	    this._state = "PATTERN";
 	    this._pattern = "";
+	    this._startPos = curPos;
 	}
     }
     else if (this._state == "PATTERN") {
@@ -333,12 +338,14 @@ CompEditTextWidget.prototype.handleInputEvent = function(event) {
 	    if (this._bestChoices.length == 1) {
 		//console.log( "INSERT");
 		var lenPattern = this._pattern.length;
-		var newVal = val.slice(0,curPos-1) + this._bestChoices[0].slice(lenPattern) + ']]' + val.slice(curPos);
+		//regexp var newVal = val.slice(0,curPos-1) + this._bestChoices[0].slice(lenPattern) + ']]' + val.slice(curPos);
+		var newVal = val.slice(0,this._startPos) + this._bestChoices[0] + ']]' + val.slice(curPos);
                 // console.log( "NEW VAL = "+newVal );
                 // WARN : Directly modifie domNode.value.
                 // Not sure it does not short-circuit other update methods of the domNode....
 		domNode.value = newVal;
-              	domNode.setSelectionRange(curPos+this._bestChoices[0].length-lenPattern+1,curPos+this._bestChoices[0].length-lenPattern+1);
+              	//regexp domNode.setSelectionRange(curPos+this._bestChoices[0].length-lenPattern+1,curPos+this._bestChoices[0].length-lenPattern+1);
+		domNode.setSelectionRange(this._startPos+this._bestChoices[0].length+2,this._startPos+this._bestChoices[0].length+2);
 	    }
 	    // remove ENTER and INSERT le reste de _bestChoice[0]
 	    else {
@@ -353,6 +360,7 @@ CompEditTextWidget.prototype.handleInputEvent = function(event) {
 	    this._nbSquareParen = 0;
 	    this._state = "VOID";
 	    this._pattern = "";
+	    this._startPos = -1;
 	    this.popupHide( popupNode );
 	}
 	// Building the PATTERN
@@ -382,6 +390,7 @@ CompEditTextWidget.prototype.handleInputEvent = function(event) {
 		this._nbSquareParen = 0;
 		this._state = "VOID";
 		this._pattern = "";
+	        this._startPos = -1;
 		this.popupHide( popupNode );
 		// remove ENTER
     }          
@@ -413,6 +422,7 @@ CompEditTextWidget.prototype.handleKeyupEvent = function(event) {
 	    this._nbSquareParen = 0;
 	    this._state = "VOID";
 	    this._pattern = "";
+	    this._startPos = -1;
 	    this.popupHide( popupNode );
 	    //event.stopPropagation(); // needed ???
 	}             
