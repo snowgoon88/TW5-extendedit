@@ -1,6 +1,6 @@
 title: About the Edit-CompText plugin
 
-In editarea of the 'text' field, two '[' in a row enter the ''completion mode'' and any subsequent alphanumeric character suggest completion possibilities in overlay.
+In editarea of the 'text' field, two '[' in a row enter the ''completion mode'' and any subsequent alphanumeric character suggest completion possibilities in overlay. The completion is over all Tiddlers with a title that match the pattern entered.
 
 * ENTER, when only one possible completion, completes the link
 * ENTER, when more than one possible completion, takes you out of completion mode.
