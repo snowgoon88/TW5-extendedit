@@ -17,7 +17,7 @@ Reload and « voilà »...
 
 
 **Older Suff**
-* 12/28/2015 : First real TW5 plugin
+* 12/28/2015 : v0.1 First real TW5 plugin
 * 12/26/2015 : Second Version
   as a stand alone TW5 file : Sandbox/tw5_one_file.html
 * 2014 : First Version
