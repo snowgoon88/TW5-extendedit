@@ -1,0 +1,19 @@
+{
+	"description": "Demo of the Edit-Comptext plugin",
+	"plugins": [
+		"tiddlywiki/tiddlyweb",
+                "tiddlywiki/filesystem",
+		"tiddlywiki/highlight",
+		"snowgoon88/edit-comptext"
+	],
+	"themes": [
+		"tiddlywiki/vanilla",
+		"tiddlywiki/snowwhite"
+	],
+	"includeWikis": [
+	],
+	"build": {
+		"index": [
+			"--rendertiddler","$:/core/save/all","edit-comptextdemo.html","text/plain"]
+	}
+}
