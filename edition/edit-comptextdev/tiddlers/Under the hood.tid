@@ -1,0 +1,26 @@
+title: Under the hood
+
+Right now, I am still playing with the concept.
+
+* Started from the Widget edit-text.js to create  [[$:/plugins/snowgoon88/edit-comptext.js]] : ``edit-comptext`` Widget
+* A module to compute the pixel position of the cursor : [[$:/plugins/snowgoon88/edit-comptext/cursor-position.js]]
+* Changed settings to say that  ''text/vnd.tiddlywiki'' editors should use ``comptext``
+
+!!Usefull suggestions
+* Trigger completion with Ctrl+Space
+* Use ARROWS to navigate the popupwindow
+
+!!What I think still needs to be done :
+
+* testing in various environment
+** Linux+Firefox : OK
+** Linux+Chromium : OK
+** Win7+Firefox : OK
+* clarify and neatify (??) my coding of TW5. I'm very new to the subtilities of javascript and TW5. for example, I'm sure some computation could be cached to improve performance.
+* Not sure : my way of editing the current editarea is very low-level and "raw"
+* Not sure : my way of having a popup window is also crude and low-level.
+* Not sure : should I delete the popupNode DomNode (popupWindow) explicitely or is it automatically taken care of by the TW5 engine ?
+
+
+
+All this is available at https://github.com/snowgoon88/TW5-extendedit
