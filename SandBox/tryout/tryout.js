@@ -3,6 +3,20 @@
  * from @author Lea Verou http://leaverou.github.io/awesomplete
  *
  * @author snowgoon88ATgmailDOTcom
+ *
+ * Two Behavior
+ * - detect that 2 '[' are typed : PATTERN
+ * - CTRL+SPACE : PATTERN (if any)
+ *
+ * In any case, pattern is [[->cursorPos.
+ *
+ * keyDOWN and INPUT are repeatable, act on keyDOWN
+ * keyUP is only once
+ * keyPressed can get the Char entred (BEWARE arrow_down ~~ '(' )
+ * INPUT : val changed, i.e: add or del character
+ * Keys = 17:Ctrl, 32:Space, 53:'5([', 225:AltGr
+ *
+ * _state : VOID -> (PATTERN -> (SELECT -> VOID) | VOID)
  */
 
 var listeLiens = ['myLink', 'myLore', 'myTruc', 'myOne', 'myTwo', 'myThree', 'myOther', 'other'];
@@ -12,6 +26,8 @@ var _state = "VOID";
 var _bestChoices = [];
 var _idxChoice = -1;
 var _maxChoice = 4;
+var _lastChar = "";
+var _hasInput = false;
 
 // var _regexpNode = document.getElementById('regexp');
 var _regexpStr = "";
@@ -20,7 +36,7 @@ var _regexpStr = "";
 /*
 Inner function : find the best matches
 */
-var bestChoice = function( pattern, nbMax) {
+var bestChoiceStart = function( pattern, nbMax) {
     //TW5 var allTidTitles = $tw.wiki.getTiddlers(); /*wiki.js*/
     var allTidTitles = listeLiens; /*sandbox*/
     var bestStr = "";
@@ -46,6 +62,64 @@ var bestChoice = function( pattern, nbMax) {
         }
     }
     return bestStr;
+};
+var bestChoice = function( pattern, nbMax) {
+    //TW5 var allTidTitles = $tw.wiki.getTiddlers(); /*wiki.js*/
+    var allTidTitles = listeLiens; /*sandbox*/
+    // regexp search pattern, case sensitive
+   //TW5  var regpat = RegExp( $tw.utils.escapeRegExp(pattern) );
+     var regpat = RegExp( regExpEscape(pattern) );
+    var nbBest = 0;
+   // nbMax set to 2 if no value given
+    nbMax = nbMax !== undefined ? nbMax : 5;
+
+    this._bestChoices = [];
+    for( var i=0; i<allTidTitles.length; i++ ) {
+	//console.log( "SW "+allTidTitles[i]+ " w "+pattern +" ?" );
+	//regexg if ( allTidTitles[i].startsWith( pattern ) ) {
+	if( regpat.test(allTidTitles[i]) ) {
+	    //console.log( "SW => YES");
+	    if (nbBest == nbMax) {
+		this._bestChoices.push( "..." );
+		return;
+	    } else {
+		this._bestChoices.push( allTidTitles[i] );
+		nbBest += 1;
+	    }
+	}
+    }
+};
+/**
+ * Inner function : compute pattern.
+ *
+ * Between previous '[[' and pos
+ * 
+ * If no pattern -> undefined
+ */
+var calcPattern = function( text, pos ) {
+    // Remonter pour détecter les ]]=>STOP ou les [[=>START
+    // Descendre pour détecter les [[=>STOP ou les ]]=>STOP
+    var pos_prevOpen = text.lastIndexOf( '[[', pos );
+    var pos_prevClosed = text.lastIndexOf( ']]', pos );
+    var pos_nextClosed = text.indexOf( ']]', pos  );
+    console.log ("__CALC po="+pos_prevOpen+" pc="+pos_prevClosed+" nc="+pos_nextClosed+" pos="+pos);
+    pos_nextClosed = (pos_nextClosed >= 0) ? pos_nextClosed : pos;
+    
+    if( (pos_prevOpen >= 0) &&                 // must be opened
+	((pos_prevOpen > pos_prevClosed ) ||  // not closed yet
+	 (pos_prevClosed == pos))) {          // closed at cursor
+	console.log("     pat="+text.slice( pos_prevOpen+2, pos) );
+	return { text: text.slice( pos_prevOpen+2, pos ),
+		 start: pos_prevOpen,
+		 end: pos_nextClosed
+	       };
+    };
+};
+var abortPattern = function () {
+    this._state = "VOID";
+    this._nbSquareParen = 0;
+    this._bestChoices = [];
+    this._idxChoice = -1;
 };
 
 /*
@@ -76,15 +150,16 @@ var itemHTML = function (text, input) {
 /**
  * Insert into the textarea.
 */
-var insertInto = function(node, text, pos ) {
-    var lenPattern = this._pattern.length;
+var insertInto = function(node, text, posBefore, posAfter ) {
+    // var lenPattern = this._pattern.length;
     var val = node.value;
-    var newVal = val.slice(0,pos-1) + text.slice(lenPattern) + ']]' + val.slice(pos);
-    // console.log( "NEW VAL = "+newVal );
+    var newVal = val.slice(0, posBefore) + '[[' + text + ']]' + val.slice(posAfter);
+    console.log ("__INSERT pb="+posBefore+" pa="+posAfter+" txt="+text);
+    console.log( "NEW VAL = "+newVal );
     // WARN : Directly modifie domNode.value.
     // Not sure it does not short-circuit other update methods of the domNode....
     node.value = newVal;
-    node.setSelectionRange(pos+text.length-lenPattern+1,pos+text.length-lenPattern+1);
+    node.setSelectionRange(posBefore+text.length+4, posBefore+text.length+4 );
 };
 /*
  * Add an element in the DOM.
@@ -164,6 +239,16 @@ function handleInputEvent(event) {
     var key = event.keyCode;
     console.log( "__INPUT ("+key+") "+ curPos + " => " + pChar+ "|" + this._state );
     
+    var pattern = calcPattern( val, curPos );
+    if( pattern ) {
+	log( 'pattern.text', pattern );
+	log( 'regexp', regExpEscape(pattern));
+    } 
+    else {
+	log( 'pattern', "VOID" );
+	log( 'regexp', "" );
+    }
+
     // '['
     if (this._state == "VOID" && pChar == '[') {
 	//console.log( "VOID and [");
@@ -312,7 +397,17 @@ function handleKeydownEvent(event) {
     var val = domNode.value;
     var pChar = val[curPos-1];
 
-    console.log( "__KEYUP ("+key+") "+ curPos + " => " + pChar+ "|" + this._state );
+    //console.log( "__KEYDOWN ("+key+") "+ curPos + " => " + pChar+ "|" + this._state );
+
+    var pattern = calcPattern( val, curPos );
+    if( pattern ) {
+	log( 'pattern', pattern.text );
+	log( 'regexp', regExpEscape(pattern));
+    } 
+    else {
+	log( 'pattern', "VOID" );
+	log( 'regexp', "" );
+    }
 
      if (this._state == "PATTERN") {
 	 if( key == 38 || key == 40 ) {
@@ -320,7 +415,222 @@ function handleKeydownEvent(event) {
 	 }
      }
 };
+//******************************************************************************
+//******************************************************************************
+//******************************************************************************
+//******************************************************************************
+/** 
+ * Handle Keyup Event
+*/
+function onKeyUp(event) {
+    // TextareaNode
+    var areaNode = document.getElementById('entree'); /*sandbox*/
+    var curPos = areaNode.selectionStart;  // cursor position
+    var val = areaNode.value;   // text in the area
+    // PopupNode
+    var popupNode = document.getElementById('l_choice');; /*sandbox*/
+    // key 
+    var key = event.keyCode;
+    var pChar = val[curPos-1];
+    
+    console.log( "__KEYUP ("+key+") "+ curPos + "'" +pChar+"'" );
 
+    // // Pattern below cursor : undefined if no pattern
+    // var pattern = calcPattern( val, curPos );
+    
+    // ESC
+    if( key == 27 ) {
+	abortPattern();
+	logStatus( "" );
+    }
+    // add char '['
+    if( this._hasInput && this._state == "VOID" && this._lastChar == '[') {
+	//console.log( "VOID and [");
+	this._nbSquareParen += 1;
+	if (this._nbSquareParen == 2 ) {
+	    //console.log( "state switch to PATTERN" );
+	    this._state = "PATTERN";
+	    logStatus( "" );
+	}
+    }
+    // a pattern
+    else if( this._state == "PATTERN" || this._state == "SELECT" ) {
+	// Pattern below cursor : undefined if no pattern
+	var pattern = calcPattern( val, curPos );
+	if( key == 13 ) { // ENTER
+	    // console.log( "KEY : Enter" );
+	    // 	    event.preventDefault();
+	    // 	    event.stopPropagation();
+    	    // Un choix ?
+    	    var selected = this._idxChoice > -1 && this._idxChoice != this._maxChoice;
+    	    console.log( "   > sel="+selected+" len="+this._bestChoices.length );
+    	    if( selected ) {
+    		console.log( "   > selected" );
+    		insertInto( areaNode, this._bestChoices[this._idxChoice], pattern.start, curPos );
+    	    }
+    	    else if( this._bestChoices.length == 1 ) {
+    		console.log( "   > only one" );
+    		insertInto( areaNode, this._bestChoices[0], pattern.start, curPos );
+    	    }
+	    abortPattern();
+	    logStatus( "" );
+    	}
+	else if( key == 38 && !this._hasInput) { // up
+	    this._state = "SELECT";
+    	    event.preventDefault();
+    	    previous( popupNode );
+	    logStatus( pattern.text );
+    	    //event.stopPropagation();
+    	}
+    	else if( key == 40 && !this._hasInput) { // down
+	    this._state = "SELECT";
+    	    event.preventDefault();
+    	    next( popupNode );
+	    logStatus( pattern.text );
+    	    //event.stopPropagation();
+    	}
+    	else { // pattern changed by keypressed
+	    //var pattern = calcPattern( val, curPos );
+	    this._idxChoice = -1;
+    	    // log
+	    logStatus( pattern.text );
+    	    // Popup with choices if pattern at least two letters long
+	    if( pattern.text.length > 1 ) {
+    		var choice = this.bestChoice( pattern.text );
+    		popupNode.innerHTML = "";
+    		//console.log( "BC "+ this._pattern + " => " + choice );
+    		if (this._bestChoices.length > 0) {
+    		    //this._state = "PATTERN";
+    		    this._bestChoices.forEach( function(text) {
+    			popupNode.appendChild( itemHTML(text, pattern.text));
+    		    });
+    		}
+	    }
+    	}
+    }
+
+
+    // // A pattern ?
+    // if( pattern && pattern.text.length > 0 ) {
+    // 	if( key == 38 ) {      // up
+    // 	    event.preventDefault();
+    // 	    previous( popupNode );
+    // 	    log( 'pattern', pattern.text );
+    // 	    log( 'regexp', regExpEscape(pattern.text));
+    // 	    //event.stopPropagation();
+    // 	}
+    // 	else if( key == 40 ) { // down
+    // 	    event.preventDefault();
+    // 	    next( popupNode );
+    // 	    log( 'pattern', pattern.text );
+    // 	    log( 'regexp', regExpEscape(pattern.text));
+    // 	    //event.stopPropagation();
+    // 	}
+    // 	else if( key == 13 ) { // ENTER
+    // 	    // console.log( "KEY : Enter" );
+    // 	    event.preventDefault();
+    // 	    event.stopPropagation();
+    // 	    // Un choix ?
+    // 	    var selected = this._idxChoice > -1 && this._idxChoice != this._maxChoice;
+    // 	    console.log( "   > sel="+selected+" len="+this._bestChoices.length );
+    // 	    if( selected ) {
+    // 		console.log( "   > selected" );
+    // 		insertInto( areaNode, this._bestChoices[this._idxChoice], pattern.start, pattern.end );
+    // 	    }
+    // 	    else if( this._bestChoices.length == 1 ) {
+    // 		console.log( "   > only one" );
+    // 		insertInto( areaNode, this._bestChoices[0], pattern.start, pattern.end );
+    // 	    }
+    // 	    this._bestChoices = [];
+    // 	    this._idxChoice = -1;
+    // 	    //TW5 this.popupHide( popupNode ); 
+    // 	    log( 'pattern', "" );
+    // 	    log( 'regexp', "" );
+    // 	}
+    // 	else {
+    // 	    // log
+    // 	    log( 'pattern', pattern.text );
+    // 	    log( 'regexp', regExpEscape(pattern.text));
+    // 	    // Popup with choices
+    // 	    var choice = this.bestChoice( pattern.text );
+    // 	    popupNode.innerHTML = "";
+    // 	    //console.log( "BC "+ this._pattern + " => " + choice );
+    // 	    if (this._bestChoices.length > 0) {
+    // 		this._state = "SELECTION";
+    // 		this._bestChoices.forEach( function(text) {
+    // 		    popupNode.appendChild( itemHTML(text, pattern.text));
+    // 		});
+    // 	    }
+    // 	}
+    // }
+    // else { // no pattern
+    // 	// log
+    // 	log( 'pattern', "" );
+    // 	log( 'regexp', "" );
+    // 	// Clear List
+    // 	this._state = "VOID";
+    // 	popupNode.innerHTML = "";
+    // 	this._bestChoices = [];
+    // }
+};
+//******************************************************************************
+//******************************************************************************
+function onKeyDown(event) {
+    // TextareaNode
+    var areaNode = document.getElementById('entree'); /*sandbox*/ /*debug*/
+    var curPos = areaNode.selectionStart;  // cursor position /*debug*/
+    var val = areaNode.value;   // text in the area /*debug*/
+    // key 
+    var key = event.keyCode;
+    var pChar = val[curPos-1]; /*debug*/
+    
+    console.log( "__DOWN ("+key+") "+ curPos + "'" +pChar+"'" );
+
+    // ENTER while selecting
+    if( (this._state == "PATTERN" || this._state == "SELECT") && key == 13 ) {
+    	event.preventDefault();
+    	event.stopPropagation();
+    }
+    if( (key==38 || key==40) && 
+	(this._state == "PATTERN" || this._state == "SELECT") ) {
+	event.preventDefault();
+     }
+};
+//******************************************************************************
+//******************************************************************************
+function onInput(event) {
+    // TextareaNode
+    var areaNode = document.getElementById('entree'); /*sandbox*/
+    var curPos = areaNode.selectionStart;  // cursor position
+    var val = areaNode.value;   // text in the area
+    // key 
+    var key = event.keyCode || event.which;
+    var pChar = val[curPos-1];
+    var letter = String.fromCharCode(key);
+    
+    this._hasInput = true;
+
+    console.log( "__INPUT ("+key+") "+ curPos + "'" +pChar+"' l="+letter );
+};
+function onKeyPress(event) {
+    // TextareaNode
+    var areaNode = document.getElementById('entree'); /*sandbox*/
+    var curPos = areaNode.selectionStart;  // cursor position
+    var val = areaNode.value;   // text in the area
+    // key 
+    var key = event.keyCode || event.which;
+    var pChar = val[curPos-1];
+    
+    this._lastChar = String.fromCharCode(key);
+    this._hasInput = false;
+    
+    console.log( "__PRESS ("+key+") "+ curPos + "'" +pChar+"' l="+this._lastChar );
+
+    // Détecter Ctrl+Space
+    if( key == 32 && event.ctrlKey && this._state == "VOID" ) {
+	this._state = "PATTERN";
+    }
+};
 /** Handle keyup Event
  * Catch ARROW, HOME, END, BACKSPACE, INSERT, SUPPR.
  */
@@ -345,11 +655,15 @@ function handleKeyupEvent(event) {
 	if( key == 38 ) {      // up
 	    event.preventDefault();
 	    previous( popupNode );
+	    log( 'pattern', "[["+this._pattern );
+	    log( 'regexp', regExpEscape(this._pattern));
 	    //event.stopPropagation();
 	}
 	else if( key == 40 ) { // down
 	    event.preventDefault();
 	    next( popupNode );
+	    log( 'pattern', "[["+this._pattern );
+	    log( 'regexp', regExpEscape(this._pattern));
 	    //event.stopPropagation();
 	}
 	else if( key == 13 ) { // ENTER
@@ -376,14 +690,27 @@ function handleKeyupEvent(event) {
 	    log( 'pattern', "VOID" );
 	    log( 'regexp', regExpEscape(this._pattern));
 	}
-	else if (key == 37 || key == 39 || key == 35 || key == 36 || key == 8 || key== 45 || key == 46) {
-	    //console.log( "ABORT" );
+	// ESC
+	else if (key == 27 ) {
 	    this._nbSquareParen = 0;
 	    this._state = "VOID";
 	    this._pattern = "";
+	    this._bestChoices = [];
+	    this._idxChoice = -1;
+	    log( 'pattern', "VOID" );
+	    log( 'regexp', regExpEscape(this._pattern));
 	    //TW5 this.popupHide( popupNode );
 	    //event.stopPropagation(); // needed ???
-	}             
+	}
+	// else if (key == 37 || key == 39 || key == 35 || key == 36 || key == 8 || key== 45 || key == 46) {
+	//     //console.log( "ABORT" );
+	//     this._nbSquareParen = 0;
+	//     this._state = "VOID";
+	//     this._pattern = "";
+	//     //TW5 this.popupHide( popupNode );
+	//     //event.stopPropagation(); // needed ???
+	// }
+        
     }
 };
 
@@ -391,6 +718,9 @@ function handleKeyupEvent(event) {
 /*
  * LogWrite into Regexp
  */
+function logStatus( msg ) {
+    log( 'pattern', this._state+":-"+msg+"- idx="+this._idxChoice );
+};
 function log( where, msg ) {
     var node = document.getElementById( where );
     node.innerHTML = msg;

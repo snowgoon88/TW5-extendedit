@@ -42,11 +42,12 @@ textarea-caret-position fait le job en exportant.
 https://github.com/component/textarea-caret-position
 *** DONE Comment nommer notre popup ? 
 pas besoin, on la met dans une variables locale (mais UGLY)
-** TODO Utiliser un PATTERN qui commencer par * pour lancer une recherche 'intelligente' dans les titres de Tiddlers
+** DONE Utiliser un PATTERN qui commencer par * pour lancer une recherche 'intelligente' dans les titres de Tiddlers
 ** TODO Dans les autres champs que le field.text (titre, etc...)
 
 ** DONE Utiliser les UP,DOWN pour naviguer dans la liste => tryout
 
+** DONE Pattern depuis le dernier '[[' ouvert sans ] ] pour fermer, ESC pour en sortir 
 * Plugin EditText (CodeEdit)
 ==========================
 Abréviation utiliséé par moi : XXX <- truc' veut dire que XXX est ''mon'' raccourci local pour truc.

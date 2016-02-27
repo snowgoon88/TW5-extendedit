@@ -12,12 +12,17 @@
 <body>
   <div>
     <h3>Entrée</h3>
-    <textarea id="entree" rows="15" cols="70" 
+    <!--textarea id="entree" rows="15" cols="70" 
 	      onKeyUp="handleKeyupEvent(event);" 
 	      onKeyDown="handleKeydownEvent(event);" 
 	      onInput="handleInputEvent(event);">
       
-    </textarea>
+    </textarea-->
+    <textarea id="entree" rows="15" cols="70" 
+	      onKeyDown="onKeyDown(event)"
+	      onKeyPress="onKeyPress(event)"
+	      onInput="onInput(event)"
+	      onKeyUp="onKeyUp(event);"></textarea>
   </div>
   
   <div>
