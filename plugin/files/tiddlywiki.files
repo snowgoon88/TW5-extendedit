@@ -7,6 +7,20 @@
 				  "title": "$:/plugins/snowgoon88/edit-comptext/cursor-position.js",
 				  "module-type": "library"
 			}
+		},{
+			"file": "completions.js",
+			"fields": {
+				  "type": "application/javascript",
+				  "title": "$:/plugins/snowgoon88/edit-comptext/completion.js",
+				  "module-type": "library"
+			}
+		},{
+			"file": "edit-comptext.css",
+			"fields": {
+				"type": "text/css",
+				"title": "$:/plugins/snowgoon88/edit-comptext/edit-comptext.css",
+				"tags": "[[$:/tags/Stylesheet]]"
+			}
 		}
 	]
 }
