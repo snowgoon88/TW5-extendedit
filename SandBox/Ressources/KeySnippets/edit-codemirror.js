@@ -31,6 +31,7 @@ var CODEMIRROR_OPTIONS = "$:/config/CodeMirror";
 if($tw.browser && !window.CodeMirror) {
 	window.CodeMirror = require("$:/plugins/tiddlywiki/codemirror/lib/codemirror.js");
 	// Install required CodeMirror plugins
+    // {} is default data
 	var configOptions = $tw.wiki.getTiddlerData(CODEMIRROR_OPTIONS,{}),
 		req = configOptions.require;
 	if(req) {

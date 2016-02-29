@@ -48,10 +48,16 @@ pas besoin, on la met dans une variables locale (mais UGLY)
 ** DONE Utiliser les UP,DOWN pour naviguer dans la liste => tryout
 
 ** DONE Pattern depuis le dernier '[[' ouvert sans ] ] pour fermer, ESC pour en sortir 
-** Configuration par un fichier JSON
+** TODO Configuration par un fichier JSON
 *** Voir CodeMirror
 *** Voir file:///home/dutech/Projets/TW5-edit-comptext/SandBox/Ressources/tw5_keysnippet.html
 
+** TODO Passer function de génération de liste en paramètre
+*** Completion( gen_function) {
+*** this._getOptions = gen_function
+*** TODO marche avec new Completion( $tw.utils.getAllTiddlers(), )
+Peut être qu'il faut passer par self = this;
+Puis utiliser self._getOptions
 * Plugin EditText (CodeEdit)
 ==========================
 Abréviation utiliséé par moi : XXX <- truc' veut dire que XXX est ''mon'' raccourci local pour truc.
