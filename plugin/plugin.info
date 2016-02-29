@@ -2,7 +2,7 @@
 	"title": "$:/plugins/snowgoon88/edit-comptext",
 	"description": "Editor with some on-line completion capabilities",
 	"author": "AlainD",
-	"version": "1.0",
+	"version": "0.3",
 	"core-version": ">=5.0.8",
 	"source": "https://github.com/snowgoon88/TW5-extendedit",
 	"plugin-type": "plugin",

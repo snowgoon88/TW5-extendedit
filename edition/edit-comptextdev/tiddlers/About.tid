@@ -1,15 +1,26 @@
 title: About the Edit-CompText plugin
+type: text/vnd.tiddlywiki
 
-In editarea of the 'text' field, two '[' in a row enter the ''completion mode'' and any subsequent alphanumeric character suggest completion possibilities in overlay. The completion is over all Tiddlers with a title that match the pattern entered.
+In editarea of the 'text' field, two '[' in a row enter the ''completion mode'' and any subsequent alphanumeric character suggest completion possibilities in overlay. The completion is over all Tiddlers with a title that matches the pattern entered.
 
+* The pattern taken into accont is the text between '[[' and the cursor.
 * ENTER, when only one possible completion, completes the link
-* ENTER, when more than one possible completion, takes you out of completion mode.
-* BACKSPACE, DEL, ARROWS takes you out of completion mode
+* when a popup window is visible, UP/DOWN allow to choose a link that is selected with ENTER.
+* CTRL+SPACE take you into completion mode (if possible)
+* ESC take you out of completion mode
+* you can use BACKSPACE, DEL, LEFT, RIGHT when in completion mode. 
 
 Try it editing this or any new Tiddler.
 
-FYI, a list of already created tiddlers :     hisOne, hisTwo, myOne, myTwo, myThree, myFor, myFive, so in edit mode, `[[hisO+ENTER` should do just fine...
+FYI, a list of already created tiddlers :     hisOne, hisTwo, myOne, myTwo, myThree, myFor, myFive, mySix, so in edit mode, `[[hisO+ENTER` should do just fine...
 
+!! Install
 To add the plugin to your own TiddlyWiki5, just drag this link to the browser window:
 
 [[$:/plugins/snowgoon88/edit-comptext]]
+
+Sometime, a small configuration step is then needed
+
+in `$:/ControlPanel -> Advanced -> Editor Type -> text/vnd.tiddlywiki` you must chose `comptext` instead of `text`.
+
+Reload and « voilà »...

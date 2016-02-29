@@ -24,6 +24,7 @@ Dev
 
 Older Stuff
 -----------
+* 29/02/2016 : v0.3 Can use CTRL+SPACE, UP/DOWN, ESC.
 * 22/01/2016 : v0.2 Completion with Title that match pattern
 * 12/28/2015 : v0.1 First real TW5 plugin
 * 12/26/2015 : Second Version
