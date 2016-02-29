@@ -159,14 +159,18 @@ var Completion = function( getOptions, display, undisplay) {
      */
     this._next = function (node) {
 	var count = node.children.length;
+	//DEBUG console.log( "__NEXT: co="+count+" nbMatch="+this._bestMatches.length);
 	if( this._bestMatches.length > 0 ) 
 	    this._goto( node, this._idxChoice < count - 1 ? this._idxChoice + 1 : -1);
+	//DEBUG this._logStatus( "NexT" );
     };
     this._previous = function (node) {
 	var count = node.children.length;
 	var selected = this._idxChoice > -1;
+	//DEBUG console.log( "__PREV: co="+count+" nbMatch="+this._bestMatches.length);
 	if( this._bestMatches.length > 0 ) 
 	    this._goto( node, selected ? this._idxChoice - 1 : count - 1);
+	//DEBUG this._logStatus( "PreV" );
     };
     // Should not be used, highlights specific item without any checks!
     this._goto = function (node, idx) {
@@ -197,19 +201,23 @@ var Completion = function( getOptions, display, undisplay) {
     // **************************************************************************
     /**
      * Disable the *effects* of ENTER / UP / DOWN when needed.
+     * Set _hasInput to false.
      */
     this._onKeyDown = function(event) {
 	// key 
 	var key = event.keyCode;
+	this._hasInput = false;
+
+	//DEBUG console.log( "__KEYDOWN ("+key+") hasI="+this._hasInput);
 	
 	// ENTER while selecting
-	if( (this._state == "PATTERN" || this._state == "SELECT") && key == 13 ) {
+	if( (this._state === "PATTERN" || this._state === "SELECT") && key === 13 ) {
     	    event.preventDefault();
     	    event.stopPropagation();
 	}
 	// UP/DOWN while a pattern is extracted
-	if( (key==38 || key==40) && 
-	    (this._state == "PATTERN" || this._state == "SELECT") ) {
+	if( (key===38 || key===40) && 
+	    (this._state === "PATTERN" || this._state === "SELECT") ) {
 	    event.preventDefault();
 	}
     };
@@ -218,19 +226,20 @@ var Completion = function( getOptions, display, undisplay) {
      */
     this._onInput = function(event) {
 	this._hasInput = true;
+	//DEBUG console.log( "__INPUT hasI="+this._hasInput );
     };	
     /**
-     * Set _lastChar, detects CTRL+SPACE, set _hasInput to false
+     * Set _lastChar, detects CTRL+SPACE.
      */
     this._onKeyPress = function(event) {
 	// key 
 	var key = event.keyCode || event.which;
 	
 	this._lastChar = String.fromCharCode(key);
-	this._hasInput = false;
+	//DEBUG console.log( "__KEYPRESS ("+key+") hasI="+this._hasInput+" char="+this._lastChar );
     
 	// Détecter Ctrl+Space
-	if( key == 32 && event.ctrlKey && this._state == "VOID" ) {
+	if( key === 32 && event.ctrlKey && this._state === "VOID" ) {
 	    this._state = "PATTERN";
 	}
     };
@@ -251,28 +260,28 @@ var Completion = function( getOptions, display, undisplay) {
 	// key 
 	var key = event.keyCode;
     
-	//console.log( "__KEYUP ("+key+") "+ curPos + "'" +pChar+"'" );
+	//DEBUG console.log( "__KEYUP ("+key+") hasI="+this._hasInput );
 
 	// ESC
-	if( key == 27 ) {
+	if( key === 27 ) {
 	    this._abortPattern( displayNode );
 	    this._logStatus( "" );
 	}
 	// add char '['
-	if( this._hasInput && this._state == "VOID" && this._lastChar == '[') {
+	if( this._hasInput && this._state === "VOID" && this._lastChar === '[') {
 	    //console.log( "VOID and [");
 	    this._nbSquareParen += 1;
-	    if (this._nbSquareParen == 2 ) {
+	    if (this._nbSquareParen === 2 ) {
 		//console.log( "state switch to PATTERN" );
 		this._state = "PATTERN";
 		this._logStatus( "" );
 	    }
 	}
 	// a pattern
-	else if( this._state == "PATTERN" || this._state == "SELECT" ) {
+	else if( this._state === "PATTERN" || this._state === "SELECT" ) {
 	    // Pattern below cursor : undefined if no pattern
 	    var pattern = this._extractPattern( val, curPos );
-	    if( key == 13 ) { // ENTER
+	    if( key === 13 ) { // ENTER
 		// console.log( "KEY : Enter" );
 		// 	    event.preventDefault();
 		// 	    event.stopPropagation();
@@ -283,21 +292,21 @@ var Completion = function( getOptions, display, undisplay) {
     		    //console.log( "   > selected" );
     		    this._insertInto( areaNode, this._bestMatches[this._idxChoice], pattern.start, curPos );
     		}
-    		else if( this._bestMatches.length == 1 ) {
+    		else if( this._bestMatches.length === 1 ) {
     		    //console.log( "   > only one" );
     		    this._insertInto( areaNode, this._bestMatches[0], pattern.start, curPos );
     		}
 		this._abortPattern( displayNode );
 		this._logStatus( "" );
     	    }
-	    else if( key == 38 && !this._hasInput) { // up
+	    else if( key === 38 && this._hasInput === false) { // up
 		this._state = "SELECT";
     		event.preventDefault();
     		this._previous( displayNode );
 		this._logStatus( pattern.text );
     		//event.stopPropagation();
     	    }
-    	    else if( key == 40 && !this._hasInput) { // down
+    	    else if( key === 40 && this._hasInput === false) { // down
 		this._state = "SELECT";
     		event.preventDefault();
     		this._next( displayNode );

@@ -15,7 +15,7 @@ Add link-to-tiddler completion
 
 TODO : use completion.js
 TODO : CSS pour le menu
-TODO : pk UP/DOWN ne marchent pas ?
+TODO : where should popupNode be created in the DOM ?
 
 \*/
 (function(){
