@@ -8,7 +8,7 @@
 				  "module-type": "library"
 			}
 		},{
-			"file": "completions.js",
+			"file": "completion.js",
 			"fields": {
 				  "type": "application/javascript",
 				  "title": "$:/plugins/snowgoon88/edit-comptext/completion.js",

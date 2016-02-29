@@ -1,26 +1,27 @@
+created: 20160229144123472
+modified: 20160229145047744
 title: Under the hood
+type: text/vnd.tiddlywiki
 
-Right now, I am still playing with the concept.
+I think the concept is quite mature now, but everything can still be revised/altered if needed.
 
 * Started from the Widget edit-text.js to create  [[$:/plugins/snowgoon88/edit-comptext.js]] : ``edit-comptext`` Widget
 * A module to compute the pixel position of the cursor : [[$:/plugins/snowgoon88/edit-comptext/cursor-position.js]]
+* All the completion logic is in the [[$:/plugins/snowgoon88/edit-comptext/completion.js]] module.
+* Small CSS additions in [[$:/plugins/snowgoon88/edit-comptext/edit-comptext.css]]
 * Changed settings to say that  ''text/vnd.tiddlywiki'' editors should use ``comptext``
 
-!!Usefull suggestions
-* Trigger completion with Ctrl+Space
-* Use ARROWS to navigate the popupwindow
-
-!!What I think still needs to be done :
+!! What I think still needs to be done :
 
 * testing in various environment
 ** Linux+Firefox : OK
-** Linux+Chromium : OK
-** Win7+Firefox : OK
-* clarify and neatify (??) my coding of TW5. I'm very new to the subtilities of javascript and TW5. for example, I'm sure some computation could be cached to improve performance.
-* Not sure : my way of editing the current editarea is very low-level and "raw"
-* Not sure : my way of having a popup window is also crude and low-level.
-* Not sure : should I delete the popupNode DomNode (popupWindow) explicitely or is it automatically taken care of by the TW5 engine ?
-
+** Linux+Chromium : ???
+** Win7+Firefox : ???
+** Safari : ???
+* ''TW5 spirit''
+** Create the popupNode using more appropriate $tw5 methods ?
+** ''WHERE'' in the DOM should I add the popup window ? Only one popup or one popup for each tidder ?
+** Should I take care of removing the popup from the DOM ? When ? How ?
 
 
 All this is available at https://github.com/snowgoon88/TW5-extendedit
