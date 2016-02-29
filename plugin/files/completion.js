@@ -20,7 +20,7 @@ type: application/javascript
  */
 (function(){
 
-var Completion = function( getOptions, display, undisplay) {
+var Completion = function( display, undisplay) {
     /** How many opened '[' */
     this._nbSquareParen = 0;
     /** State */
@@ -35,15 +35,12 @@ var Completion = function( getOptions, display, undisplay) {
     /** Display and Undisplay function */
     this._display = display;
     this._undisplay = undisplay;
-    /** Get Options to choose from */
-    this._getOptions = getOptions;
 
     /** 
      * Find the bestMatches among listChoice with given pattern
      */
     this._findBestMatches = function( listChoice, pattern, nbMax) {
 	// regexp search pattern, case sensitive
-	//TW5  var regpat = RegExp( $tw.utils.escapeRegExp(pattern) );
 	var regpat = RegExp( this._regExpEscape(pattern) );
 	var nbMatch = 0;
 	// nbMax set to _maxMatch if no value given
@@ -54,7 +51,7 @@ var Completion = function( getOptions, display, undisplay) {
 	    //DEBUG console.log( "__FIND: "+listChoice[i]+ " w "+pattern +" ?" );
 	    // is the regular expression found
 	    if( regpat.test( listChoice[i]) ) {
-		if (nbMatch === nbMax) {
+		if (nbMatch >= nbMax) {
 		    this._bestMatches.push( "..." );
 		    return;
 		} else {
@@ -72,8 +69,7 @@ var Completion = function( getOptions, display, undisplay) {
      * If no pattern -> undefined
      */
     this._extractPattern = function( text, pos ) {
-	// Remonter pour détecter les ]]=>STOP ou les [[=>START
-	// Descendre pour détecter les [[=>STOP ou les ]]=>STOP
+	// Detect previous and next ]]=>STOP or [[=>START
 	var pos_prevOpen = text.lastIndexOf( '[[', pos );
 	var pos_prevClosed = text.lastIndexOf( ']]', pos );
 	var pos_nextClosed = text.indexOf( ']]', pos  );
@@ -100,8 +96,8 @@ var Completion = function( getOptions, display, undisplay) {
      */
     this._itemHTML = function (text, input) {
 	// text si input === ''
-	// sinon construit une RegExp qui est globale (g) et case insensitive (i)
-	// pour remplacer par <mark>$&</mark> où "$&" est le pattern matched
+	// otherwise, build RegExp that is global (g) and case insensitive (i)
+	// to replace with <mark>$&</mark> where "$&" is the matched pattern
 	var html = input === '' ? text : text.replace(RegExp(this._regExpEscape(input.trim()), "gi"), "<mark>$&</mark>");
 	return this._create("li", {
 	    innerHTML: html,
@@ -200,7 +196,7 @@ var Completion = function( getOptions, display, undisplay) {
     // ******************************************************************eventCbk
     // **************************************************************************
     /**
-     * Disable the *effects* of ENTER / UP / DOWN when needed.
+     * Disable the *effects* of ENTER / UP / DOWN / ESC when needed.
      * Set _hasInput to false.
      */
     this._onKeyDown = function(event) {
@@ -212,6 +208,11 @@ var Completion = function( getOptions, display, undisplay) {
 	
 	// ENTER while selecting
 	if( (this._state === "PATTERN" || this._state === "SELECT") && key === 13 ) {
+    	    event.preventDefault();
+    	    event.stopPropagation();
+	}
+	// ESC while selecting
+	if( (this._state === "PATTERN" || this._state === "SELECT") && key === 27 ) {
     	    event.preventDefault();
     	    event.stopPropagation();
 	}
@@ -251,12 +252,8 @@ var Completion = function( getOptions, display, undisplay) {
      *                     pattern.length > _minPatternLength -> display  
      */
     this._onKeyUp = function(event, listOptions, areaNode, displayNode ) {
-	// TextareaNode
-	// var areaNode = document.getElementById('entree'); /*sandbox*/
 	var curPos = areaNode.selectionStart;  // cursor position
 	var val = areaNode.value;   // text in the area
-	// PopupNode
-	// var popupNode = document.getElementById('l_choice');; /*sandbox*/
 	// key 
 	var key = event.keyCode;
     
@@ -265,7 +262,7 @@ var Completion = function( getOptions, display, undisplay) {
 	// ESC
 	if( key === 27 ) {
 	    this._abortPattern( displayNode );
-	    this._logStatus( "" );
+	    //DEBUG this._logStatus( "" );
 	}
 	// add char '['
 	if( this._hasInput && this._state === "VOID" && this._lastChar === '[') {
@@ -274,7 +271,7 @@ var Completion = function( getOptions, display, undisplay) {
 	    if (this._nbSquareParen === 2 ) {
 		//console.log( "state switch to PATTERN" );
 		this._state = "PATTERN";
-		this._logStatus( "" );
+		//DEBUG this._logStatus( "" );
 	    }
 	}
 	// a pattern
@@ -283,10 +280,8 @@ var Completion = function( getOptions, display, undisplay) {
 	    var pattern = this._extractPattern( val, curPos );
 	    if( key === 13 ) { // ENTER
 		// console.log( "KEY : Enter" );
-		// 	    event.preventDefault();
-		// 	    event.stopPropagation();
-    		// Un choix ?
-    		var selected = this._idxChoice > -1 && this._idxChoice != this._maxChoice;
+    		// Choice made in the displayNode ?
+    		var selected = this._idxChoice > -1 && this._idxChoice !== this._maxMatch;
     		// console.log( "   > sel="+selected+" len="+this._bestChoices.length );
     		if( selected ) {
     		    //console.log( "   > selected" );
@@ -297,48 +292,54 @@ var Completion = function( getOptions, display, undisplay) {
     		    this._insertInto( areaNode, this._bestMatches[0], pattern.start, curPos );
     		}
 		this._abortPattern( displayNode );
-		this._logStatus( "" );
+		//DEBUG this._logStatus( "" );
     	    }
 	    else if( key === 38 && this._hasInput === false) { // up
 		this._state = "SELECT";
     		event.preventDefault();
     		this._previous( displayNode );
-		this._logStatus( pattern.text );
+		//DEBUG this._logStatus( pattern.text );
     		//event.stopPropagation();
     	    }
     	    else if( key === 40 && this._hasInput === false) { // down
 		this._state = "SELECT";
     		event.preventDefault();
     		this._next( displayNode );
-		this._logStatus( pattern.text );
+		//DEBUG this._logStatus( pattern.text );
     		//event.stopPropagation();
     	    }
-    	    else { // pattern changed by keypressed
+    	    else if( pattern ) { // pattern changed by keypressed
 		//var pattern = calcPattern( val, curPos );
 		this._idxChoice = -1;
     		// log
-		this._logStatus( pattern.text );
+		//DEBUG this._logStatus( pattern.text );
     		// Popup with choices if pattern at least two letters long
 		if( pattern.text.length > 1 ) {
-		    //console.log( "__UP: getOptions ");
-		    //var listOptions = this._getOptions();
-		    //console.log( "__UP: findBestMatches ");
     		    this._findBestMatches( listOptions, pattern.text );
     		    displayNode.innerHTML = "";
     		    //console.log( "BC "+ this._pattern + " => " + choice );
     		    if (this._bestMatches.length > 0) {
-    			//this._state = "PATTERN";
 			for( var i=0; i<this._bestMatches.length; i++) {
     			    displayNode.appendChild( 
 				this._itemHTML(this._bestMatches[i], 
 					       pattern.text));
     			}
+			this._display( areaNode, displayNode );			
     		    }
-		    this._display( areaNode, displayNode );
+		    else { // no matches
+			this._state = "PATTERN";
+			this._undisplay( areaNode, displayNode );
+		    }
 		}
     	    }
+	    else { // no pattern detected
+		this._abortPattern( displayNode );
+	    }
 	}
     };
+    /**
+     * Used for debug
+     */
     this._logStatus = function(msg) {
 	console.log( "__STATUS: "+this._state+":-"+msg+"- idx="+this._idxChoice );
     };
