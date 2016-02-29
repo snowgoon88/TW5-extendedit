@@ -13,8 +13,8 @@ I think the concept is quite mature now, but everything can still be revised/alt
 
 * testing in various environment
 ** Linux+Firefox : OK
-** Linux+Chromium : ???
-** Win7+Firefox : ???
+** Linux+Chromium : OK
+** Win7+Firefox : OK
 ** Safari : ???
 * ''TW5 spirit''
 ** Create the popupNode using more appropriate $tw5 methods ?
