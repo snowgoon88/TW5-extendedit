@@ -1,9 +1,8 @@
-created: 20160224204835374
-modified: 20160228222611691
-module-type: widget
+/**
 title: $:/plugins/snowgoon88/edit-comptext/completion.js
 type: application/javascript
-
+module-type: widget
+*/
 /**
  * Completion object as used by edit-comptext TW5 widget.
  * Hope this can nearly constitute a 'stand-alone' completion module.

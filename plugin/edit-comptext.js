@@ -1,9 +1,3 @@
-created: 20160224204835374
-modified: 20160224204953853
-module-type: widget
-title: $:/plugins/snowgoon88/edit-comptext/edit-comptext.js
-type: application/javascript
-
 /*\
 title: $:/plugins/snowgoon88/edit-comptext/edit-comptext.js
 type: application/javascript

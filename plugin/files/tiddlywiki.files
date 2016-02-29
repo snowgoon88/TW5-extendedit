@@ -17,7 +17,7 @@
 		},{
 			"file": "edit-comptext.css",
 			"fields": {
-				"type": "text/css",
+				"type": "text/vnd.tiddlywiki",
 				"title": "$:/plugins/snowgoon88/edit-comptext/edit-comptext.css",
 				"tags": "[[$:/tags/Stylesheet]]"
 			}
