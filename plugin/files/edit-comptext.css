@@ -1,0 +1,22 @@
+created: 20160229103526823
+modified: 20160229112248722
+tags: $:/tags/Stylesheet
+title: $:/plugins/snowgoon88/edit-comptext/edit-comptext.css
+type: text/css
+
+.ect-block-dropdown li {
+    display: block;
+    padding: 4px 14px 4px 14px;
+    text-decoration: none;
+    color: #5778d8; /*<<colour tiddler-link-foreground>>;*/
+    background: transparent;
+}
+.ect-block-dropdown li[patt-selected="true"] {
+    color: #ffffff; /*<<colour tiddler-link-background>>;*/
+    background-color: #5778d8; /*<<colour tiddler-link-foreground>>;*/
+}
+.ect-block-dropdown li[patt-selected="true"] mark {
+    background: hsl(86, 100%, 21%);
+    color: inherit;
+}
+

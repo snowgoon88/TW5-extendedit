@@ -13,9 +13,13 @@ Taken from original Edit-text widget
 Version 5.1.9 of TW5
 Add link-to-tiddler completion
 
-TODO : use completion.js
 TODO : CSS pour le menu
+       + Pk <<colour tiddler-link-foreground>> marche pas ??
 TODO : where should popupNode be created in the DOM ?
+TODO : Overide ESC quand PATT ou SELECT
+TODO : Check when PATTERN should vanish
+       + efface tout, même [[
+       + plus de choix (_bestMatches == 0)
 
 \*/
 (function(){
@@ -131,8 +135,10 @@ CompEditTextWidget.prototype.render = function(parent,nextSibling) {
     // Insert a special "div" element for poping up
     // Its 'display' property in 'style' control its visibility
     var popupNode = this.document.createElement("div");
-    popupNode.setAttribute( "style", "border:1px solid gray; display:none; position: absolute; color:blue; background-color: white;");
-    popupNode.className = "popup_comptext";
+    //popupNode.setAttribute( "style", "border:1px solid gray; display:none; position: absolute; color:blue; background-color: white;");
+    popupNode.setAttribute( "style", "display:none; position: absolute;");
+    //popupNode.className = "popup_comptext";
+    popupNode.className = "tc-block-dropdown ect-block-dropdown";
     // Insert the element into the DOM
     parent.insertBefore(popupNode,nextSibling);
     this.domNodes.push(popupNode);
