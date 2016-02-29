@@ -1,5 +1,29 @@
-title: $:/plugins/snowgoon88/edit-comptext
+title: $:/plugins/snowgoon88/edit-comptext/readme
+
+!! What ?
+This plugin adds ''completion'' when editing the body of a tiddler.
+
+* Enter completion-mode by typing `[[` or `CTRL+SPACE`
+* A list of tiddlers with a title that matches the pattern between `[[` and cursor appears
+* `UP/DOWN` keys can select a tiddler, `ENTER` to validate
+* If there is only one match, `ENTER` selects it.
+
+!! To try it or get the latest news
+See [[http://snowgoon88.github.io/TW5-extendedit]]
+
+!! Install 
+
+To add the plugin to your own TiddlyWiki5, just drag this link to the browser window:
+
+[[$:/plugins/snowgoon88/edit-comptext]]
+
+Sometime, a small configuration step is then needed
+
+in `$:/ControlPanel -> Advanced -> Editor Type -> text/vnd.tiddlywiki` you must chose `comptext` instead of `text`.
+
+Reload and « voilà »...
 
 This plugin is quite mature now :o)
 
-[[Source code|https://github.com/snowgoon88/TW5-extendedit]]
+!! Source code
+On github [[https://github.com/snowgoon88/TW5-extendedit]]
