@@ -40,7 +40,7 @@ var Completion = function( display, undisplay) {
      */
     this._findBestMatches = function( listChoice, pattern, nbMax) {
 	// regexp search pattern, case sensitive
-	var regpat = RegExp( this._regExpEscape(pattern) );
+	var regpat = RegExp( this._regExpEscape(pattern), "i" );
 	var nbMatch = 0;
 	// nbMax set to _maxMatch if no value given
 	nbMax = nbMax !== undefined ? nbMax : this._maxMatch;
