@@ -52,6 +52,40 @@ pas besoin, on la met dans une variables locale (mais UGLY)
 *** Voir CodeMirror
 *** Voir file:///home/dutech/Projets/TW5-edit-comptext/SandBox/Ressources/tw5_keysnippet.html
 
+** DONE Config par valeur de tiddler 
+https://github.com/tobibeer/tw5-appear/blob/master/src/appear.js
+/*
+Retrieves a widget parameter as either attribute, config-tiddler default or hard-coded fallback.
+*/
+AppearWidget.prototype.getValue = function(value,attr){
+	var def,undef,
+		// Global fallbacks
+		fallbacks = {
+			show: "»",
+			"default-state": "$:/temp/appear/"
+		};
+	// If there is no value...
+	if(value === undefined) {
+		// Get default for it
+		def = this.wiki.getTiddler("$:/plugins/tobibeer/appear/defaults/" + attr);
+		// Got one?
+		if(def) {
+			// Check if set to undefined
+			undef = def.getFieldString("undefined");
+			// Not undefined?
+			if(!undef || undef === "false") {
+				// Read default
+				value = def.getFieldString("text");
+			}
+		}
+	}
+	// If we still have no value
+	if(value === undefined) {
+		// Try to read from fallbacks
+		value = fallbacks[attr];
+	}
+	return value;
+};
 ** TODO Passer function de génération de liste en paramètre
 *** Completion( gen_function) {
 *** this._getOptions = gen_function
