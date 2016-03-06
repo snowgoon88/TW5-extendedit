@@ -13,9 +13,11 @@ Reload and « voilà »...
 
 Dev
 ---
+
 ### Making demo onfile html
 * The `edition/edit-comptextdemo` directory should be copied/linked into `$TW5HOME/editions` directory
 * Then in `$TW5HOME`, run `nodejs ./tiddlywiki.js editions/edit-comptextdemo --build index` to create a stand alone `edit-comptextdemo.html` demo in `$TW5HOME/editions/edit-comptextdemo/output`
+
 ### Develop with nodejs
 * Set up 'TIDDLYWIKI_EDITION_PATH' to 'edition'
 * Link '$TW5HOME/plugins/snowgoon88/edit-comptext' to 'plugin'
@@ -24,6 +26,7 @@ Dev
 
 Older Stuff
 -----------
+* 07/03/2017 : v0.4 Configuration in 'config' tiddler.
 * 29/02/2016 : v0.3 Can use CTRL+SPACE, UP/DOWN, ESC.
 * 22/01/2016 : v0.2 Completion with Title that match pattern
 * 12/28/2015 : v0.1 First real TW5 plugin

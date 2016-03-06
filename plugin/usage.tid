@@ -1,0 +1,8 @@
+title: $:/plugins/snowgoon88/edit-comptext/usage
+
+Configuration of the plugin can be done through tiddler [[$:/plugins/snowgoon88/edit-comptext/config]].
+
+!! body of the 'config' tiddler
+
+{{$:/plugins/snowgoon88/edit-comptext/config}}
+

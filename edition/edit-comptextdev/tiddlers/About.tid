@@ -23,4 +23,10 @@ Sometime, a small configuration step is then needed
 
 in `$:/ControlPanel -> Advanced -> Editor Type -> text/vnd.tiddlywiki` you must chose `comptext` instead of `text`.
 
+Some options of the plugins itself (case sensitive search, how many choices displayed, etc) can be changed in [[$:/plugins/snowgoon88/edit-comptext/config]]
+
 Reload and « voilà »...
+
+!! Issus, Critics, Other
+
+via Github or mail to : snowgoon88(AT)gmail(DOT)com

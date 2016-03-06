@@ -27,7 +27,10 @@ var Completion = function( display, undisplay) {
     /** Best matches */
     this._bestMatches = [];
     this._idxChoice = -1;
+    /** Options */
     this._maxMatch = 5;   // maximum nb of match displayed
+    this._minPatLen = 2;
+    this._caseSensitive = false;
     /** Input information */
     this._lastChar = "";
     this._hasInput = false;
@@ -40,7 +43,8 @@ var Completion = function( display, undisplay) {
      */
     this._findBestMatches = function( listChoice, pattern, nbMax) {
 	// regexp search pattern, case sensitive
-	var regpat = RegExp( this._regExpEscape(pattern), "i" );
+	var flagSearch = this._caseSensitive ? "" : "i" ;
+	var regpat = RegExp( this._regExpEscape(pattern), flagSearch );
 	var nbMatch = 0;
 	// nbMax set to _maxMatch if no value given
 	nbMax = nbMax !== undefined ? nbMax : this._maxMatch;
@@ -313,7 +317,7 @@ var Completion = function( display, undisplay) {
     		// log
 		//DEBUG this._logStatus( pattern.text );
     		// Popup with choices if pattern at least two letters long
-		if( pattern.text.length > 1 ) {
+		if( pattern.text.length > (this._minPatLen-1) ) {
     		    this._findBestMatches( listOptions, pattern.text );
     		    displayNode.innerHTML = "";
     		    //console.log( "BC "+ this._pattern + " => " + choice );
