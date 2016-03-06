@@ -8,6 +8,7 @@ Version 5.1.9 of TW5
 Add link-to-tiddler completion
 
 TODO : where should popupNode be created in the DOM ?
+TODO : check that options are valid (numeric ?)
 \*/
 (function(){
 
@@ -21,6 +22,10 @@ var Widget = require("$:/core/modules/widgets/widget.js").widget;
 // to compute pixel coordinates of cursor
 var getCaretCoordinates = require("$:/plugins/snowgoon88/edit-comptext/cursor-position.js");
 var Completion = require("$:/plugins/snowgoon88/edit-comptext/completion.js").Completion;
+
+var isNumeric = function(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+};
 
 var CompEditTextWidget = function(parseTreeNode,options) {
     this.initialise(parseTreeNode,options);
@@ -45,8 +50,16 @@ var CompEditTextWidget = function(parseTreeNode,options) {
 	    popupNode.style.display = 'none';
 	}
     };
-    this._comp = new Completion( display, undisplay );
+    // Options for Completion - Could check for numeric.
+    this._compMinPatLen = this.getValue( this._compMinPatLen, "minpatternlength" );
+    this._compMaxMatch = this.getValue( this._compMaxMatch, "maxmatch" );
+    this._compCaseSensitive = this.getValue( this._compCaseSensitive, "casesensitive" );
+    this._compCaseSensitive = this._compCaseSensitive === "no" ? false : true;
     
+    this._comp = new Completion( display, undisplay );
+    this._comp._maxMatch = this._compMaxMatch;
+    this._comp._minPatLen = this._compMinPatLen;
+    this._comp._caseSensitive = this._compCaseSensitive;
 };
     
 /*
@@ -338,6 +351,37 @@ CompEditTextWidget.prototype.saveChanges = function(text) {
 	if(text !== editInfo.value) {
 		editInfo.update(text);
 	}
+};
+
+CompEditTextWidget .prototype.getValue = function(value,attr) {
+    var tidConfig,fieldVal,
+    // Global fallbacks
+    fallbacks = {
+        minpatternlength : 2,
+        maxmatch : 5,
+        casesensitive : "no"
+    };
+    // If there is no value...
+    if(value === undefined) {
+	// Get default from config tiddler
+        tidConfig = this.wiki.getTiddler("Config");
+	console.log( "__GETVALUE def="+tidConfig.getFieldString(attr) );
+	// Got one?
+	if(tidConfig) {
+	    // Check has proper field
+	    fieldVal = tidConfig.getFieldString( attr );
+	    console.log( "__Field "+attr+" = "+ fieldVal );
+	    if( fieldVal !== "" ) {
+		value = fieldVal;
+	    }
+	}
+    }
+    // If we still have no value
+    if(value === undefined) {
+	// Try to read from fallbacks
+	value = fallbacks[attr];
+    }
+    return value;
 };
 
 // a new widget :o)

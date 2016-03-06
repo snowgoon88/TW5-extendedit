@@ -1,0 +1,11 @@
+casesensitive: no
+maxmatch: 8
+minpatternlength: 2
+type: text/vnd.tiddlywiki
+title: $:/plugins/snowgoon88/edit-comptext/config 
+
+In the fields below you can configure the behavior of link completion.
+
+* `casesensitive` search : ''{{!!casesensitive}}'' (yes/no)
+* Displays at most `maxmatch` choices : ''{{!!maxmatch}}'' (integer)
+* Begin search when pattern is at least `minpatlength` long : ''{{!!minpatternlength}}'' (integer)
