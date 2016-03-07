@@ -26,6 +26,7 @@ Dev
 
 Older Stuff
 -----------
+* 07/03/2017 : v0.4.1 Fix small bug in naming config tiddler
 * 07/03/2017 : v0.4 Configuration in 'config' tiddler.
 * 29/02/2016 : v0.3 Can use CTRL+SPACE, UP/DOWN, ESC.
 * 22/01/2016 : v0.2 Completion with Title that match pattern
