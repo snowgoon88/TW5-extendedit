@@ -354,7 +354,7 @@ CompEditTextWidget.prototype.saveChanges = function(text) {
 };
 
 CompEditTextWidget .prototype.getValue = function(value,attr) {
-    var tidConfig,fieldVal,
+    var tidConfig, fieldVal,
     // Global fallbacks
     fallbacks = {
         minpatternlength : 2,
@@ -364,7 +364,7 @@ CompEditTextWidget .prototype.getValue = function(value,attr) {
     // If there is no value...
     if(value === undefined) {
 	// Get default from config tiddler
-        tidConfig = this.wiki.getTiddler("Config");
+        tidConfig = this.wiki.getTiddler("$:/plugins/snowgoon88/edit-comptext/config");
 	console.log( "__GETVALUE def="+tidConfig.getFieldString(attr) );
 	// Got one?
 	if(tidConfig) {
