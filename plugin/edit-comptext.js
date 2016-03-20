@@ -331,7 +331,7 @@ CompEditTextWidget.prototype.handleKeyupEvent = function(event) {
  */
 CompEditTextWidget.prototype.handleKeypressEvent = function(event) {
     // Defer to Completion
-    this._comp._onKeyPress(event);
+    this._comp._onKeyPress(event,this.domNodes[0]); // ugly
 };
 /**
  * Handle keydown.

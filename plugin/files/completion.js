@@ -14,8 +14,10 @@ module-type: widget
  * - CTRL+SPACE : PATTERN (if any)
  * - ESC returns to VOID
  *
- * In any case, pattern is [[->cursorPos.
+ * In any case, pattern is 'Template.pat'->cursorPos.
  * _state : VOID -> (PATTERN -> (SELECT -> VOID) | VOID)
+ * 
+ * TODO : some clean up.
  */
 (function(){
 
@@ -25,6 +27,7 @@ var Completion = function( display, undisplay, wiki) {
     this._nbSquareParen = 0;
     /** State */
     this._state = "VOID";
+    this._template = undefined;
     /** Best matches */
     this._bestMatches = [];
     this._idxChoice = -1;
@@ -218,6 +221,7 @@ var Completion = function( display, undisplay, wiki) {
 	this._bestChoices = [];
 	this._idxChoice = -1;
 	this._undisplay( null, displayNode );
+	this._template = undefined;
     };
     // **************************************************************************
     // ******************************************************************eventCbk
@@ -259,16 +263,37 @@ var Completion = function( display, undisplay, wiki) {
     /**
      * Set _lastChar, detects CTRL+SPACE.
      */
-    this._onKeyPress = function(event) {
+    this._onKeyPress = function(event, areaNode) {
+	var curPos = areaNode.selectionStart;  // cursor position
+	var val = areaNode.value;   // text in the area
 	// key 
 	var key = event.keyCode || event.which;
 	
 	this._lastChar = String.fromCharCode(key);
 	//DEBUG console.log( "__KEYPRESS ("+key+") hasI="+this._hasInput+" char="+this._lastChar );
+	this._logStatus( "KEYPRESS" );
     
 	// Détecter Ctrl+Space
 	if( key === 32 && event.ctrlKey && this._state === "VOID" ) {
-	    this._state = "PATTERN";
+	    //Find a proper Template
+	    // first from which we can extract a pattern
+	    if( this._template === undefined ) {
+		console.log("__SPACE : find a Template" );
+		var idT, res;
+		for( idT=0; idT < this._listTemp.length; idT++ ) {
+		    res = this._extractPattern( val, curPos, this._listTemp[idT] );
+		    console.log("  t="+this._listTemp[idT].pat+" res="+res);
+		    if( res ) {
+			this._template = this._listTemp[idT];
+			this._state = "PATTERN";
+			break;
+		    }
+		}
+	    }
+	    else {
+		console.log("__SPACE : already a template" );
+		this._state = "PATTERN";
+	    }
 	}
     };
     /**
@@ -281,7 +306,7 @@ var Completion = function( display, undisplay, wiki) {
     this._onKeyUp = function(event, listOptions, areaNode, displayNode ) {
 	var curPos = areaNode.selectionStart;  // cursor position
 	var val = areaNode.value;   // text in the area
-	// key 
+	// key a
 	var key = event.keyCode;
     
 	//DEBUG console.log( "__KEYUP ("+key+") hasI="+this._hasInput );
@@ -308,9 +333,6 @@ var Completion = function( display, undisplay, wiki) {
 			this._state = "PATTERN";
 			this._template = template;
 
-			//TRY list of tiddlers
-			//TRY var results = this.wiki.filterTiddlers(this._pattern.filter);
-			//TRY console.log( "__CHECK: l="+results );
 			break; // get out of loop
 		    }
 		}
@@ -342,12 +364,12 @@ var Completion = function( display, undisplay, wiki) {
     		if( selected ) {
     		    //console.log( "   > selected" );
     		    this._insertInto( areaNode, this._bestMatches[this._idxChoice], pattern.start, curPos, this._template );
-    		}
+		        		}
     		else if( this._bestMatches.length === 1 ) {
     		    //console.log( "   > only one" );
     		    this._insertInto( areaNode, this._bestMatches[0], pattern.start, curPos, this._template );
+		    this._template = undefined;
     		}
-		this._abortPattern( displayNode );
 		//DEBUG this._logStatus( "" );
     	    }
 	    else if( key === 38 && this._hasInput === false) { // up
@@ -377,7 +399,6 @@ var Completion = function( display, undisplay, wiki) {
 			allOptions = this.wiki.filterTiddlers( this._template.filter );
 		    else
 			allOptions = this.wiki.filterTiddlers("[all[tiddlers]]");
-    		    //TRY this._findBestMatches( listOptions, pattern.text );
 		    this._findBestMatches( allOptions, pattern.text );
     		    displayNode.innerHTML = "";
     		    //console.log( "BC "+ this._pattern + " => " + choice );
