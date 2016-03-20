@@ -19,7 +19,8 @@ module-type: widget
  */
 (function(){
 
-var Completion = function( display, undisplay) {
+var Completion = function( display, undisplay, wiki) {
+    this.wiki = wiki;
     /** How many opened '[' */
     this._nbSquareParen = 0;
     /** State */
@@ -37,6 +38,20 @@ var Completion = function( display, undisplay) {
     /** Display and Undisplay function */
     this._display = display;
     this._undisplay = undisplay;
+    /** NEW
+     * Structure pour pattern plus génériques
+     */
+    var Template = function( pat, filter, start, end ) {
+	this.pat = pat;
+	this.filter = filter;
+	this.start = start;
+	this.end = end;
+	this.pos = 0;
+    };
+    this._listTemp = [
+    	new Template( "[[", "[all[tiddlers]!is[system]]", "[[", "]]" ),
+    	new Template( "<p", "[tag[PNJ]!is[system]]", "<<pnjin \"", "\">>")
+    ];
 
     /** 
      * Find the bestMatches among listChoice with given pattern
@@ -67,23 +82,26 @@ var Completion = function( display, undisplay) {
     /**
      * Extract Pattern from text at a give position.
      *
-     * Between previous '[[' and pos
+     * Between previous template.pat (or '[[') and pos
      * 
      * If no pattern -> undefined
      */
-    this._extractPattern = function( text, pos ) {
+    this._extractPattern = function( text, pos, template ) {
 	// Detect previous and next ]]=>STOP or [[=>START
-	var pos_prevOpen = text.lastIndexOf( '[[', pos );
-	var pos_prevClosed = text.lastIndexOf( ']]', pos );
-	var pos_nextClosed = text.indexOf( ']]', pos  );
-	// console.log ("__CALC po="+pos_prevOpen+" pc="+pos_prevClosed+" nc="+pos_nextClosed+" pos="+pos);
+	var sPat = template.pat ? template.pat : '[[';
+	var pos_prevOpen = text.lastIndexOf( sPat, pos );
+	var ePat = template.end ? template.end : ']]';
+	var pos_prevClosed = text.lastIndexOf( ePat, pos );
+	var pos_nextClosed = text.indexOf( ePat, pos  );
+	console.log("__CALC st="+sPat+" -> en="+ePat );
+	console.log("__CALC po="+pos_prevOpen+" pc="+pos_prevClosed+" nc="+pos_nextClosed+" pos="+pos);
 	pos_nextClosed = (pos_nextClosed >= 0) ? pos_nextClosed : pos;
     
 	if( (pos_prevOpen >= 0) &&                 // must be opened
 	    ((pos_prevOpen > pos_prevClosed ) ||  // not closed yet
 	     (pos_prevClosed === pos))) {          // closed at cursor
-	    //console.log("     pat="+text.slice( pos_prevOpen+2, pos) );
-	    return { text: text.slice( pos_prevOpen+2, pos ),
+	    console.log("     pat="+text.slice( pos_prevOpen+sPat.length, pos) );
+	    return { text: text.slice( pos_prevOpen+sPat.length, pos ),
 		     start: pos_prevOpen,
 		     end: pos_nextClosed
 		   };
@@ -97,7 +115,7 @@ var Completion = function( display, undisplay) {
      * Returns : list item. 
      * Generates list items with the user’s input highlighted via <mark>.
      */
-    this._itemHTML = function (text, input) {
+    this._itemHTML = function (text, input ) {
 	// text si input === ''
 	// otherwise, build RegExp that is global (g) and case insensitive (i)
 	// to replace with <mark>$&</mark> where "$&" is the matched pattern
@@ -108,17 +126,23 @@ var Completion = function( display, undisplay) {
 	});
     };
     /**
-     * Insert text into a textarea node, enclosing in '[[...]]'
+     * Insert text into a textarea node, 
+     * enclosing in 'template.start..template.end'
+     *
+     * - posBefore : where the 'template.pat+pattern' starts
+     * - posAfter : where the cursor currently is
      */
-    this._insertInto = function(node, text, posBefore, posAfter ) {
+    this._insertInto = function(node, text, posBefore, posAfter, template ) {
 	var val = node.value;
-	var newVal = val.slice(0, posBefore) + '[[' + text + ']]' + val.slice(posAfter);
+	var sStart = template.start ? template.start : '[[';
+	var sEnd = template.end ? template.end : ']]';
+	var newVal = val.slice(0, posBefore) + sStart + text + sEnd + val.slice(posAfter);
 	//console.log ("__INSERT pb="+posBefore+" pa="+posAfter+" txt="+text);
 	//console.log( "NEW VAL = "+newVal );
 	// WARN : Directly modifie domNode.value.
 	// Not sure it does not short-circuit other update methods of the domNode....
 	node.value = newVal;
-	node.setSelectionRange(posBefore+text.length+4, posBefore+text.length+4 );
+	node.setSelectionRange(posBefore+text.length+sStart.length+sEnd.length, posBefore+text.length+sStart.length+sEnd.length );
     };
     /**
      * Add an '\' in front of -\^$*+?.()|[]{}
@@ -261,26 +285,55 @@ var Completion = function( display, undisplay) {
 	var key = event.keyCode;
     
 	//DEBUG console.log( "__KEYUP ("+key+") hasI="+this._hasInput );
+	//TMP console.log( "__CHECK wiki="+this.wiki );
+	//TMP console.log( "__CHECK filter="+this.wiki.filterTiddlers );
 
 	// ESC
 	if( key === 27 ) {
 	    this._abortPattern( displayNode );
 	    //DEBUG this._logStatus( "" );
 	}
-	// add char '['
-	if( this._hasInput && this._state === "VOID" && this._lastChar === '[') {
-	    //console.log( "VOID and [");
-	    this._nbSquareParen += 1;
-	    if (this._nbSquareParen === 2 ) {
-		//console.log( "state switch to PATTERN" );
-		this._state = "PATTERN";
-		//DEBUG this._logStatus( "" );
+	// Check for every pattern
+	if( this._hasInput && this._state === "VOID" ) {
+	    // check every pattern
+	    var idT, template;
+	    for( idT=0; idT < this._listTemp.length; idT++ ) {
+		template = this._listTemp[idT];
+		if( this._lastChar === template.pat[template.pos] ) {
+		    template.pos += 1;
+		    console.log( "__CHECK : pat="+template.pat+" pos="+template.pos );
+		    // Pattern totaly matched ?
+		    if( template.pos === template.pat.length ) {
+			console.log( "__CHECK => found "+template.pat );
+			this._state = "PATTERN";
+			this._template = template;
+
+			//TRY list of tiddlers
+			//TRY var results = this.wiki.filterTiddlers(this._pattern.filter);
+			//TRY console.log( "__CHECK: l="+results );
+			break; // get out of loop
+		    }
+		}
+		else {
+		    template.pos = 0;
+		    console.log( "__CHECK : pat="+template.pat+" pos="+template.pos );
+		}
 	    }
 	}
+	// // add char '['
+	// if( this._hasInput && this._state === "VOID" && this._lastChar === '[') {
+	//     //console.log( "VOID and [");
+	//     this._nbSquareParen += 1;
+	//     if (this._nbSquareParen === 2 ) {
+	// 	//console.log( "state switch to PATTERN" );
+	// 	this._state = "PATTERN";
+	// 	//DEBUG this._logStatus( "" );
+	//     }
+	// }
 	// a pattern
 	else if( this._state === "PATTERN" || this._state === "SELECT" ) {
 	    // Pattern below cursor : undefined if no pattern
-	    var pattern = this._extractPattern( val, curPos );
+	    var pattern = this._extractPattern( val, curPos, this._template );
 	    if( key === 13 ) { // ENTER
 		// console.log( "KEY : Enter" );
     		// Choice made in the displayNode ?
@@ -288,11 +341,11 @@ var Completion = function( display, undisplay) {
     		// console.log( "   > sel="+selected+" len="+this._bestChoices.length );
     		if( selected ) {
     		    //console.log( "   > selected" );
-    		    this._insertInto( areaNode, this._bestMatches[this._idxChoice], pattern.start, curPos );
+    		    this._insertInto( areaNode, this._bestMatches[this._idxChoice], pattern.start, curPos, this._template );
     		}
     		else if( this._bestMatches.length === 1 ) {
     		    //console.log( "   > only one" );
-    		    this._insertInto( areaNode, this._bestMatches[0], pattern.start, curPos );
+    		    this._insertInto( areaNode, this._bestMatches[0], pattern.start, curPos, this._template );
     		}
 		this._abortPattern( displayNode );
 		//DEBUG this._logStatus( "" );
@@ -318,7 +371,14 @@ var Completion = function( display, undisplay) {
 		//DEBUG this._logStatus( pattern.text );
     		// Popup with choices if pattern at least two letters long
 		if( pattern.text.length > (this._minPatLen-1) ) {
-    		    this._findBestMatches( listOptions, pattern.text );
+		    // compute listOptions from templateFilter
+		    var allOptions;
+		    if( this._template )
+			allOptions = this.wiki.filterTiddlers( this._template.filter );
+		    else
+			allOptions = this.wiki.filterTiddlers("[all[tiddlers]]");
+    		    //TRY this._findBestMatches( listOptions, pattern.text );
+		    this._findBestMatches( allOptions, pattern.text );
     		    displayNode.innerHTML = "";
     		    //console.log( "BC "+ this._pattern + " => " + choice );
     		    if (this._bestMatches.length > 0) {
@@ -339,6 +399,8 @@ var Completion = function( display, undisplay) {
 		this._abortPattern( displayNode );
 	    }
 	}
+	// to ensure that one MUST add an input (through onInput())
+	this._hasInput = false;
     };
     /**
      * Used for debug

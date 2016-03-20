@@ -92,6 +92,16 @@ AppearWidget.prototype.getValue = function(value,attr){
 *** TODO marche avec new Completion( $tw.utils.getAllTiddlers(), )
 Peut être qu'il faut passer par self = this;
 Puis utiliser self._getOptions
+** TODO Autres pattern
+*** TODO CTRL+SPACE sur un pattern déjà existant marche pas bien...
+*** pat=[[ filter=[all[]] start="[[" end="\]\]"
+*** pat="<p" filter=PNJ start="<<pnjin \"" end="\">>"
+*** pat="<<pnjin \"" filter= PNJ start ="<<pnjin \"" end="\">>"
+*** struct
+**** pattern
+**** posPattern = 0
+Si devient pattern.length => recognized!
+
 * Plugin EditText (CodeEdit)
 ==========================
 Abréviation utiliséé par moi : XXX <- truc' veut dire que XXX est ''mon'' raccourci local pour truc.
