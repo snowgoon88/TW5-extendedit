@@ -21,7 +21,7 @@ module-type: widget
  */
 (function(){
 
-var Completion = function( display, undisplay, wiki) {
+var Completion = function( display, undisplay, wiki, listTemplates) {
     this.wiki = wiki;
     /** How many opened '[' */
     this._nbSquareParen = 0;
@@ -41,7 +41,7 @@ var Completion = function( display, undisplay, wiki) {
     /** Display and Undisplay function */
     this._display = display;
     this._undisplay = undisplay;
-    /** NEW
+    /** 
      * Structure pour pattern plus génériques
      */
     var Template = function( pat, filter, start, end ) {
@@ -51,10 +51,27 @@ var Completion = function( display, undisplay, wiki) {
 	this.end = end;
 	this.pos = 0;
     };
-    this._listTemp = [
-    	new Template( "[[", "[all[tiddlers]!is[system]]", "[[", "]]" ),
-    	new Template( "<p", "[tag[PNJ]!is[system]]", "<<pnjin \"", "\">>")
-    ];
+    this._listTemp = [];
+    // Read templates from config file
+    if( listTemplates ) {
+	var idT;
+	for( idT=0; idT<listTemplates.length; idT++ ) {
+	    var temp = listTemplates[idT];
+	    //DEBUG console.log( "__CONF : "+temp.pattern+":"+temp.filter+":"+temp.start+":"+temp.end );
+	    this._listTemp.push( 
+		new Template( temp.pattern,
+			      temp.filter,
+			      temp.start,
+			      temp.end )
+		);
+	}
+    }
+    // or defaut template
+    else {
+	this._listTemp = [
+	    new Template( "[[", "[all[tiddlers]!is[system]]", "[[", "]]" )
+	];
+    }
 
     /** 
      * Find the bestMatches among listChoice with given pattern
@@ -96,8 +113,8 @@ var Completion = function( display, undisplay, wiki) {
 	var ePat = template.end ? template.end : ']]';
 	var pos_prevClosed = text.lastIndexOf( ePat, pos );
 	var pos_nextClosed = text.indexOf( ePat, pos  );
-	console.log("__CALC st="+sPat+" -> en="+ePat );
-	console.log("__CALC po="+pos_prevOpen+" pc="+pos_prevClosed+" nc="+pos_nextClosed+" pos="+pos);
+	//DEBUG console.log("__CALC st="+sPat+" -> en="+ePat );
+	//DEBUG console.log("__CALC po="+pos_prevOpen+" pc="+pos_prevClosed+" nc="+pos_nextClosed+" pos="+pos);
 	pos_nextClosed = (pos_nextClosed >= 0) ? pos_nextClosed : pos;
     
 	if( (pos_prevOpen >= 0) &&                 // must be opened
@@ -271,18 +288,19 @@ var Completion = function( display, undisplay, wiki) {
 	
 	this._lastChar = String.fromCharCode(key);
 	//DEBUG console.log( "__KEYPRESS ("+key+") hasI="+this._hasInput+" char="+this._lastChar );
-	this._logStatus( "KEYPRESS" );
+	//DEBUG this._logStatus( "KEYPRESS" );
     
 	// Détecter Ctrl+Space
 	if( key === 32 && event.ctrlKey && this._state === "VOID" ) {
 	    //Find a proper Template
 	    // first from which we can extract a pattern
 	    if( this._template === undefined ) {
-		console.log("__SPACE : find a Template" );
+		//DEBUG console.log("__SPACE : find a Template" );
 		var idT, res;
 		for( idT=0; idT < this._listTemp.length; idT++ ) {
 		    res = this._extractPattern( val, curPos, this._listTemp[idT] );
-		    console.log("  t="+this._listTemp[idT].pat+" res="+res);
+		    //DEBUG console.log("  t="+this._listTemp[idT].pat+" res="+res);
+		    // res is not undefined => good template candidate
 		    if( res ) {
 			this._template = this._listTemp[idT];
 			this._state = "PATTERN";
@@ -291,7 +309,7 @@ var Completion = function( display, undisplay, wiki) {
 		}
 	    }
 	    else {
-		console.log("__SPACE : already a template" );
+		//DEBUG console.log("__SPACE : already a template" );
 		this._state = "PATTERN";
 	    }
 	}
@@ -338,20 +356,10 @@ var Completion = function( display, undisplay, wiki) {
 		}
 		else {
 		    template.pos = 0;
-		    console.log( "__CHECK : pat="+template.pat+" pos="+template.pos );
+		    //DEBUG console.log( "__CHECK : pat="+template.pat+" pos="+template.pos );
 		}
 	    }
 	}
-	// // add char '['
-	// if( this._hasInput && this._state === "VOID" && this._lastChar === '[') {
-	//     //console.log( "VOID and [");
-	//     this._nbSquareParen += 1;
-	//     if (this._nbSquareParen === 2 ) {
-	// 	//console.log( "state switch to PATTERN" );
-	// 	this._state = "PATTERN";
-	// 	//DEBUG this._logStatus( "" );
-	//     }
-	// }
 	// a pattern
 	else if( this._state === "PATTERN" || this._state === "SELECT" ) {
 	    // Pattern below cursor : undefined if no pattern
@@ -364,12 +372,12 @@ var Completion = function( display, undisplay, wiki) {
     		if( selected ) {
     		    //console.log( "   > selected" );
     		    this._insertInto( areaNode, this._bestMatches[this._idxChoice], pattern.start, curPos, this._template );
-		        		}
+		}
     		else if( this._bestMatches.length === 1 ) {
     		    //console.log( "   > only one" );
     		    this._insertInto( areaNode, this._bestMatches[0], pattern.start, curPos, this._template );
-		    this._template = undefined;
-    		}
+		 }
+		this._abortPattern( displayNode );
 		//DEBUG this._logStatus( "" );
     	    }
 	    else if( key === 38 && this._hasInput === false) { // up

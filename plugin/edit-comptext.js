@@ -17,6 +17,8 @@ TODO : check that options are valid (numeric ?)
 "use strict";
     
 var DEFAULT_MIN_TEXT_AREA_HEIGHT = "100px"; // Minimum height of textareas in pixels
+//TODO change name
+var COMPLETION_OPTIONS = "editcomp-config";
     
 var Widget = require("$:/core/modules/widgets/widget.js").widget;
 // to compute pixel coordinates of cursor
@@ -50,13 +52,27 @@ var CompEditTextWidget = function(parseTreeNode,options) {
 	    popupNode.style.display = 'none';
 	}
     };
+    // Load Configuration as JSON
+    this._configOptions = $tw.wiki.getTiddlerData(COMPLETION_OPTIONS,{}),
+    // Global fallbacks
+    this._defaultOptions = {
+        minPatLength : 2,
+        maxMatch : 5,
+        caseSensitive : false
+    };
+    this._defaultTemplates = [{
+	pattern: "[[",
+	filter: "[all[tiddlers]!is[system]]",
+	start: "[[",
+	end: "]]"
+    }];
     // Options for Completion - Could check for numeric.
-    this._compMinPatLen = this.getValue( this._compMinPatLen, "minpatternlength" );
-    this._compMaxMatch = this.getValue( this._compMaxMatch, "maxmatch" );
-    this._compCaseSensitive = this.getValue( this._compCaseSensitive, "casesensitive" );
-    this._compCaseSensitive = this._compCaseSensitive === "no" ? false : true;
-    
-    this._comp = new Completion( display, undisplay, this.wiki );
+    this._compMinPatLen = this.getValue( this._compMinPatLen, "minPatLength" );
+    this._compMaxMatch = this.getValue( this._compMaxMatch, "maxMatch" );
+    this._compCaseSensitive = this.getValue( this._compCaseSensitive, "caseSensitive" );
+    this._comp = new Completion( display, undisplay,
+				 this.wiki,
+				 this._configOptions.template || this._defaultTemplates);
     this._comp._maxMatch = this._compMaxMatch;
     this._comp._minPatLen = this._compMinPatLen;
     this._comp._caseSensitive = this._compCaseSensitive;
@@ -361,32 +377,15 @@ CompEditTextWidget.prototype.saveChanges = function(text) {
 };
 
 CompEditTextWidget .prototype.getValue = function(value,attr) {
-    var tidConfig, fieldVal,
-    // Global fallbacks
-    fallbacks = {
-        minpatternlength : 2,
-        maxmatch : 5,
-        casesensitive : "no"
-    };
-    // If there is no value...
-    if(value === undefined) {
-	// Get default from config tiddler
-        tidConfig = this.wiki.getTiddler("$:/plugins/snowgoon88/edit-comptext/config");
-	console.log( "__GETVALUE def="+tidConfig.getFieldString(attr) );
-	// Got one?
-	if(tidConfig) {
-	    // Check has proper field
-	    fieldVal = tidConfig.getFieldString( attr );
-	    console.log( "__Field "+attr+" = "+ fieldVal );
-	    if( fieldVal !== "" ) {
-		value = fieldVal;
-	    }
-	}
+    // If there is a config value in JSON
+    var config = this._configOptions.configuration || {};
+    if( !(attr in config) ) {
+	value = config[attr];
     }
     // If we still have no value
     if(value === undefined) {
 	// Try to read from fallbacks
-	value = fallbacks[attr];
+	value = this._defaultOptions[attr];
     }
     return value;
 };
