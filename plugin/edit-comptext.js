@@ -17,9 +17,8 @@ TODO : check that options are valid (numeric ?)
 "use strict";
     
 var DEFAULT_MIN_TEXT_AREA_HEIGHT = "100px"; // Minimum height of textareas in pixels
-//TODO change name
-var COMPLETION_OPTIONS = "editcomp-config";
-    
+// Configuration tiddler
+var COMPLETION_OPTIONS = "$:/plugins/snowgoon88/edit-comptext/config"
 var Widget = require("$:/core/modules/widgets/widget.js").widget;
 // to compute pixel coordinates of cursor
 var getCaretCoordinates = require("$:/plugins/snowgoon88/edit-comptext/cursor-position.js");

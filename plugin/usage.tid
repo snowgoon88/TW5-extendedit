@@ -1,8 +1,23 @@
 title: $:/plugins/snowgoon88/edit-comptext/usage
 
-Configuration of the plugin can be done through tiddler [[$:/plugins/snowgoon88/edit-comptext/config]].
+''Important'' : be sure that in `$:/ControlPanel -> Advanced -> Editor Type -> text/vnd.tiddlywiki` you have chosen `comptext` instead of `text`.
 
-!! body of the 'config' tiddler
+Configuration of the edit-comptext plugin can be done through the tiddler [[$:/plugins/snowgoon88/edit-comptext/config]]. Use a JSON tiddler (do not forget to set the type to `application/json`.
+
+In the `configuration` object you can set :
+
+* `caseSensitive`: `true`/`false` (is search case sensitive ?)
+* `maxMatch` : an `integer` (max number of match displayed)
+* `minPatLength` : an `integer` (minimal length of a pattern to trigger completion search)
+
+In the `template` array you can specify the various completion templates that will be used. Every template can have the following members.
+
+* `pattern` : `string` (pattern that triggers a completion, default "[[" )
+* `filter` : `string` (the filter opertators that gives the list of valid completions, default "[all[tiddlers]!is[system]]")
+* `start` : `string` (when completion is chosen, start is put before the completion, default "[[")
+* `end` : `string` (when completion is chosen, end is put after the completion, default "]]")
+
+!! Current body of Config Tiddler
 
 {{$:/plugins/snowgoon88/edit-comptext/config}}
 
