@@ -56,10 +56,17 @@ var CompEditTextWidget = function(parseTreeNode,options) {
     this._compCaseSensitive = this.getValue( this._compCaseSensitive, "casesensitive" );
     this._compCaseSensitive = this._compCaseSensitive === "no" ? false : true;
     
-    this._comp = new Completion( display, undisplay );
+    this._comp = new Completion( display, undisplay, this.wiki );
     this._comp._maxMatch = this._compMaxMatch;
     this._comp._minPatLen = this._compMinPatLen;
     this._comp._caseSensitive = this._compCaseSensitive;
+
+    //NOconsole.log( "__CHECK $tw="+$tw );
+    //NOconsole.log( "__CHECK tw.filter="+$tw.filterTiddlers );
+
+    //YESconsole.log( "__CHECK wiki="+this.wiki );
+    //YESconsole.log( "__CHECK filter="+this.wiki.filterTiddlers );
+
 };
     
 /*
@@ -324,7 +331,7 @@ CompEditTextWidget.prototype.handleKeyupEvent = function(event) {
  */
 CompEditTextWidget.prototype.handleKeypressEvent = function(event) {
     // Defer to Completion
-    this._comp._onKeyPress(event);
+    this._comp._onKeyPress(event,this.domNodes[0]); // ugly
 };
 /**
  * Handle keydown.
