@@ -3,18 +3,20 @@ type: text/vnd.tiddlywiki
 
 I think the concept is quite mature now, but everything can still be revised/altered if needed.
 
-* Started from the Widget edit-text.js to create  [[$:/plugins/snowgoon88/edit-comptext.js]] : ``edit-comptext`` Widget
+* Started from the Widget edit-text.js to create  [[$:/plugins/snowgoon88/edit-comptext/edit-comptext.js]] : ``edit-comptext`` Widget
+* I have tried to gather all completion logic in [[$:/plugins/snowgoon88/edit-comptext/completion.js]]. The most painfull part was to intercept and filter all keyboard events.
 * A module to compute the pixel position of the cursor : [[$:/plugins/snowgoon88/edit-comptext/cursor-position.js]]
-* All the completion logic is in the [[$:/plugins/snowgoon88/edit-comptext/completion.js]] module.
 * Small CSS additions in [[$:/plugins/snowgoon88/edit-comptext/edit-comptext.css]]
 * Changed settings to say that  ''text/vnd.tiddlywiki'' editors should use ``comptext``
 
 !! What I think still needs to be done :
 
+* new options
+** in defining ''template'', the `filter` could be replaced by a `list` of allowed completion. 
 * testing in various environment
 ** Linux+Firefox : OK
-** Linux+Chromium : OK
-** Win7+Firefox : OK
+** Linux+Chromium : ???
+** Win7+Firefox : ???
 ** Safari : ???
 * ''TW5 spirit''
 ** Create the popupNode using more appropriate $tw5 methods ?
