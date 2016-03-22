@@ -23,6 +23,8 @@ var Widget = require("$:/core/modules/widgets/widget.js").widget;
 // to compute pixel coordinates of cursor
 var getCaretCoordinates = require("$:/plugins/snowgoon88/edit-comptext/cursor-position.js");
 var Completion = require("$:/plugins/snowgoon88/edit-comptext/completion.js").Completion;
+//TRY
+var CompMod = require("$:/plugins/snowgoon88/edit-comptext/compmod.js").CompMod;
 
 var isNumeric = function(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -82,6 +84,9 @@ var CompEditTextWidget = function(parseTreeNode,options) {
     //YESconsole.log( "__CHECK wiki="+this.wiki );
     //YESconsole.log( "__CHECK filter="+this.wiki.filterTiddlers );
 
+    //TRY
+    this._try = new CompMod( this.wiki );
+
 };
     
 /*
@@ -138,6 +143,8 @@ CompEditTextWidget.prototype.render = function(parent,nextSibling) {
 	// Insert the element into the DOM
 	parent.insertBefore(domNode,nextSibling);
 	this.domNodes.push(domNode);
+    //TRY connect to CompMod
+    this._try2 = new CompMod( this.wiki, domNode );
     
     // Insert a special "div" element for poping up
     // Its 'display' property in 'style' control its visibility
