@@ -3,7 +3,7 @@ TW5-extendedit
 
 Plugin to extend the editor of TiddlyWiki5 with 'link completion'.
 
-:zap **NEW** :zap: define your own completion template 
+:zap: **NEW** :zap: define your own completion template 
 
 **Try it** at http://snowgoon88.github.io/TW5-extendedit
 
