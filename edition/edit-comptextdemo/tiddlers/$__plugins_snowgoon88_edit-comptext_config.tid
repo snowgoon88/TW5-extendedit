@@ -1,5 +1,5 @@
+title: $:/plugins/snowgoon88/edit-comptext/config
 type: application/json
-title: $:/plugins/snowgoon88/edit-comptext/config 
 
 {
   "configuration": {
@@ -12,6 +12,11 @@ title: $:/plugins/snowgoon88/edit-comptext/config
       "filter": "[all[tiddlers]!is[system]]",
       "start": "[[",
       "end": "]]"
-      }
+      }, {
+      "pattern": "<p",
+      "filter": "[tag[PNJ]!is[system]]",
+      "start": "<<pnjin  \"",
+      "end": "\">>"
+     }
   ]
 }

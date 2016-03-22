@@ -1,18 +1,23 @@
 title: About the Edit-CompText plugin
 type: text/vnd.tiddlywiki
 
-In editarea of the 'text' field, two '[' in a row enter the ''completion mode'' and any subsequent alphanumeric character suggest completion possibilities in overlay. The completion is over all Tiddlers with a title that matches the pattern entered.
+In editarea of the 'text' field, some ''patterns'' (by default '[[') enter the ''completion mode'' and any subsequent alphanumeric character suggest completion possibilities in overlay. The completion is over all Tiddlers with a title that matches the pattern entered.
 
-* The pattern taken into accont is the text between '[[' and the cursor.
+* The pattern taken into accont is the text between the pattern ('[[') and the cursor.
 * ENTER, when only one possible completion, completes the link
 * when a popup window is visible, UP/DOWN allow to choose a link that is selected with ENTER.
 * CTRL+SPACE take you into completion mode (if possible)
 * ESC take you out of completion mode
 * you can use BACKSPACE, DEL, LEFT, RIGHT when in completion mode. 
 
-Try it editing this or any new Tiddler.
+In this new version, you can define your own 'completion template'. See [[$:/plugins/snowgoon88/edit-comptext/usage]]
+
+
+!! Try it editing this or any new Tiddler.
 
 FYI, a list of already created tiddlers :     hisOne, hisTwo, myOne, myTwo, myThree, myFor, myFive, mySix, so in edit mode, `[[hisO+ENTER` should do just fine...
+
+I have also created a global macro named `pnjin` and tagged some tiddlers with ''PNJ'', so in edit mode, `<phisO+ENTER` should also complete to `<<pnjin "hisOne">>`. (yeah, my main motivation was dealing with a huge amount of PNJs when I use TW5 as a RPG campaign aid.)
 
 !! Install
 To add the plugin to your own TiddlyWiki5, just drag this link to the browser window:
@@ -23,10 +28,7 @@ Sometime, a small configuration step is then needed
 
 in `$:/ControlPanel -> Advanced -> Editor Type -> text/vnd.tiddlywiki` you must chose `comptext` instead of `text`.
 
-Some options of the plugins itself (case sensitive search, how many choices displayed, etc) can be changed in [[$:/plugins/snowgoon88/edit-comptext/config]]
-
 Reload and « voilà »...
 
-!! Issus, Critics, Other
-
-via Github or mail to : snowgoon88(AT)gmail(DOT)com
+!! Contact
+Do not hesitate to critic, ask, inform or yell at : `snowgoon88ATgmailDOTcom`

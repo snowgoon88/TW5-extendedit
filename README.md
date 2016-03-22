@@ -3,6 +3,8 @@ TW5-extendedit
 
 Plugin to extend the editor of TiddlyWiki5 with 'link completion'.
 
+**NEW** define your own completion template 
+
 **Try it** at http://snowgoon88.github.io/TW5-extendedit
 
 **Upload it** from http://snowgoon88.github.io/TW5-extendedit
