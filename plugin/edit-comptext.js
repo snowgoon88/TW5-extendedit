@@ -85,7 +85,7 @@ var CompEditTextWidget = function(parseTreeNode,options) {
     //YESconsole.log( "__CHECK filter="+this.wiki.filterTiddlers );
 
     //TRY
-    this._try = new CompMod( this.wiki );
+    //TRY this._try = new CompMod( this.wiki );
 
 };
     

@@ -5,7 +5,7 @@ module-type: library
 
 Try to make self-contained completion module.
 
-TODO : test event handler
+DONE : test event handler
 TODO : test popup window
 \*/
 
@@ -29,6 +29,20 @@ var CompMod = function( wiki, areaNode ) {
     console.log("__INIT: utils=",$tw.utils );
     console.log("__INIT: addEvent=",$tw.utils.addEventListeners);
     console.log("__INIT: area=",areaNode );
+
+    $tw.utils.addEventListeners( this.areaNode,[
+	{name: "keyup", handlerObject: this, handlerMethod: "handleKeyupEvent"}
+    ]);
+};
+
+// Handling event
+CompMod.prototype.handleKeyupEvent = function(event) {
+    var curPos = this.areaNode.selectionStart;  // cursor position
+    var val = this.areaNode.value;   // text in the area
+    // key a
+    var key = event.keyCode;
+    
+    console.log( "__KEYUP ("+key+") hasI="+this._hasInput );
 };
 
 exports.CompMod = CompMod;
