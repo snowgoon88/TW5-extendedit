@@ -144,7 +144,7 @@ CompEditTextWidget.prototype.render = function(parent,nextSibling) {
 	parent.insertBefore(domNode,nextSibling);
 	this.domNodes.push(domNode);
     //TRY connect to CompMod
-    this._try2 = new CompMod( this.wiki, domNode );
+    this._try2 = new CompMod( this, domNode );
     
     // Insert a special "div" element for poping up
     // Its 'display' property in 'style' control its visibility
