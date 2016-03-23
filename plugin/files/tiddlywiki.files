@@ -15,13 +15,6 @@
 				  "module-type": "library"
 			}
 		},{
-			"file": "compmod.js",
-			"fields": {
-				  "type": "application/javascript",
-				  "title": "$:/plugins/snowgoon88/edit-comptext/compmod.js",
-				  "module-type": "library"
-			}
-		},{
 			"file": "edit-comptext.css",
 			"fields": {
 				"type": "text/vnd.tiddlywiki",
