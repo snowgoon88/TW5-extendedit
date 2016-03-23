@@ -7,8 +7,10 @@ Taken from original Edit-text widget
 Version 5.1.9 of TW5
 Add link-to-tiddler completion
 
+TODO : CHECK usefull, and particularly save_changes after every input ??
 TODO : where should popupNode be created in the DOM ?
 TODO : check that options are valid (numeric ?)
+
 \*/
 (function(){
 
@@ -18,65 +20,66 @@ TODO : check that options are valid (numeric ?)
     
 var DEFAULT_MIN_TEXT_AREA_HEIGHT = "100px"; // Minimum height of textareas in pixels
 // Configuration tiddler
-var COMPLETION_OPTIONS = "$:/plugins/snowgoon88/edit-comptext/config"
+var COMPLETION_OPTIONS = "$:/plugins/snowgoon88/edit-comptext/config";
 var Widget = require("$:/core/modules/widgets/widget.js").widget;
 // to compute pixel coordinates of cursor
-var getCaretCoordinates = require("$:/plugins/snowgoon88/edit-comptext/cursor-position.js");
-var Completion = require("$:/plugins/snowgoon88/edit-comptext/completion.js").Completion;
+//CHECK var getCaretCoordinates = require("$:/plugins/snowgoon88/edit-comptext/cursor-position.js");
+//CHECK var Completion = require("$:/plugins/snowgoon88/edit-comptext/completion.js").Completion;
 //TRY
 var CompMod = require("$:/plugins/snowgoon88/edit-comptext/compmod.js").CompMod;
 
-var isNumeric = function(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-};
+//CHECK
+// var isNumeric = function(n) {
+//   return !isNaN(parseFloat(n)) && isFinite(n);
+// };
 
 var CompEditTextWidget = function(parseTreeNode,options) {
     this.initialise(parseTreeNode,options);
     
     // a Completion Object
-    // Need a display and undisplay function
-    var display = function( areaNode, popupNode ) {
-	if ( popupNode.style.display == 'none' ) {
-	    // Must get coordinate
-	    // Cursor coordinates within area + area coordinates + scroll
-            var coord = getCaretCoordinates(areaNode, areaNode.selectionEnd);
-            var styleSize = getComputedStyle(areaNode).getPropertyValue('font-size');
-            var fontSize = parseFloat(styleSize); 
+    //CHECK Need a display and undisplay function
+    // var display = function( areaNode, popupNode ) {
+    // 	if ( popupNode.style.display == 'none' ) {
+    // 	    // Must get coordinate
+    // 	    // Cursor coordinates within area + area coordinates + scroll
+    //         var coord = getCaretCoordinates(areaNode, areaNode.selectionEnd);
+    //         var styleSize = getComputedStyle(areaNode).getPropertyValue('font-size');
+    //         var fontSize = parseFloat(styleSize); 
 		
-	    popupNode.style.left = (areaNode.offsetLeft-areaNode.scrollLeft+coord.left) + 'px';
-	    popupNode.style.top = (areaNode.offsetTop-areaNode.scrollTop+coord.top+fontSize*2) + 'px';
-	    popupNode.style.display = 'block';
-	}
-    };
-    var undisplay = function( areaNode, popupNode ) {
-	if ( popupNode.style.display != 'none' ) {
-	    popupNode.style.display = 'none';
-	}
-    };
+    // 	    popupNode.style.left = (areaNode.offsetLeft-areaNode.scrollLeft+coord.left) + 'px';
+    // 	    popupNode.style.top = (areaNode.offsetTop-areaNode.scrollTop+coord.top+fontSize*2) + 'px';
+    // 	    popupNode.style.display = 'block';
+    // 	}
+    // };
+    // var undisplay = function( areaNode, popupNode ) {
+    // 	if ( popupNode.style.display != 'none' ) {
+    // 	    popupNode.style.display = 'none';
+    // 	}
+    // };
     // Load Configuration as JSON
-    this._configOptions = $tw.wiki.getTiddlerData(COMPLETION_OPTIONS,{}),
-    // Global fallbacks
-    this._defaultOptions = {
-        minPatLength : 2,
-        maxMatch : 5,
-        caseSensitive : false
-    };
-    this._defaultTemplates = [{
-	pattern: "[[",
-	filter: "[all[tiddlers]!is[system]]",
-	start: "[[",
-	end: "]]"
-    }];
-    // Options for Completion - Could check for numeric.
-    this._compMinPatLen = this.getValue( this._compMinPatLen, "minPatLength" );
-    this._compMaxMatch = this.getValue( this._compMaxMatch, "maxMatch" );
-    this._compCaseSensitive = this.getValue( this._compCaseSensitive, "caseSensitive" );
-    this._comp = new Completion( display, undisplay,
-				 this.wiki,
-				 this._configOptions.template || this._defaultTemplates);
-    this._comp._maxMatch = this._compMaxMatch;
-    this._comp._minPatLen = this._compMinPatLen;
-    this._comp._caseSensitive = this._compCaseSensitive;
+    this._configOptions = $tw.wiki.getTiddlerData( COMPLETION_OPTIONS, {} );
+    //CHECK Global fallbacks
+    // this._defaultOptions = {
+    //     minPatLength : 2,
+    //     maxMatch : 5,
+    //     caseSensitive : false
+    // };
+    // this._defaultTemplates = [{
+    // 	pattern: "[[",
+    // 	filter: "[all[tiddlers]!is[system]]",
+    // 	start: "[[",
+    // 	end: "]]"
+    // }];
+    // // Options for Completion - Could check for numeric.
+    // this._compMinPatLen = this.getValue( this._compMinPatLen, "minPatLength" );
+    // this._compMaxMatch = this.getValue( this._compMaxMatch, "maxMatch" );
+    // this._compCaseSensitive = this.getValue( this._compCaseSensitive, "caseSensitive" );
+    // this._comp = new Completion( display, undisplay,
+    // 				 this.wiki,
+    // 				 this._configOptions.template || this._defaultTemplates);
+    // this._comp._maxMatch = this._compMaxMatch;
+    // this._comp._minPatLen = this._compMinPatLen;
+    // this._comp._caseSensitive = this._compCaseSensitive;
 
     //NOconsole.log( "__CHECK $tw="+$tw );
     //NOconsole.log( "__CHECK tw.filter="+$tw.filterTiddlers );
@@ -134,26 +137,27 @@ CompEditTextWidget.prototype.render = function(parent,nextSibling) {
 	}
 	// Add an input event handler, especially for input and keyup (catch ENTER, ARROW, etc)
 	$tw.utils.addEventListeners(domNode,[
-      {name: "focus", handlerObject: this, handlerMethod: "handleFocusEvent"},
-      {name: "input", handlerObject: this, handlerMethod: "handleInputEvent"},
-      {name: "keydown", handlerObject: this, handlerMethod: "handleKeydownEvent"},
-      {name: "keypress", handlerObject: this, handlerMethod: "handleKeypressEvent"},
-      {name: "keyup", handlerObject: this, handlerMethod: "handleKeyupEvent"}
+	    {name: "focus", handlerObject: this, handlerMethod: "handleFocusEvent"},
+	    {name: "input", handlerObject: this, handlerMethod: "handleInputEvent"}
+	//CHECK     
+      // {name: "keydown", handlerObject: this, handlerMethod: "handleKeydownEvent"},
+      // {name: "keypress", handlerObject: this, handlerMethod: "handleKeypressEvent"},
+      // {name: "keyup", handlerObject: this, handlerMethod: "handleKeyupEvent"}
 	]);
 	// Insert the element into the DOM
 	parent.insertBefore(domNode,nextSibling);
 	this.domNodes.push(domNode);
     //TRY connect to CompMod
-    this._try2 = new CompMod( this, domNode );
+    this._completion = new CompMod( this, domNode, this._configOptions);
     
-    // Insert a special "div" element for poping up
+    //CHECK Insert a special "div" element for poping up
     // Its 'display' property in 'style' control its visibility
-    var popupNode = this.document.createElement("div");
-    popupNode.setAttribute( "style", "display:none; position: absolute;");
-    popupNode.className = "tc-block-dropdown ect-block-dropdown";
-    // Insert the element into the DOM
-    parent.insertBefore(popupNode,nextSibling);
-    this.domNodes.push(popupNode);
+    // var popupNode = this.document.createElement("div");
+    // popupNode.setAttribute( "style", "display:none; position: absolute;");
+    // popupNode.className = "tc-block-dropdown ect-block-dropdown";
+    // // Insert the element into the DOM
+    // parent.insertBefore(popupNode,nextSibling);
+    // this.domNodes.push(popupNode);
     
     if(this.postRender) {
 	this.postRender();
@@ -272,7 +276,8 @@ CompEditTextWidget.prototype.refresh = function(changedTiddlers) {
     }
     return false;
 };
-    
+
+//CHECK to use ??
 /*
   Update the editor with new text. This method is separate from updateEditorDomNode()
   so that subclasses can override updateEditor() and still use updateEditorDomNode()
@@ -329,50 +334,51 @@ CompEditTextWidget.prototype.fixHeight = function() {
 Handle a dom "input" event
 */
 CompEditTextWidget.prototype.handleInputEvent = function(event) {
-    // Defer to Completion object
-    this._comp._onInput(event);
+    //CHECK Defer to Completion object
+    // this._comp._onInput(event);
 
     this.saveChanges(this.domNodes[0].value); // ugly ?
     this.fixHeight();
     return true;
 };
-/** 
- * Handle keyup Event
- */
-CompEditTextWidget.prototype.handleKeyupEvent = function(event) {
-    // Defer to Completion
-    this._comp._onKeyUp(event, $tw.wiki.getTiddlers(),
-			this.domNodes[0], this.domNodes[1]); // ugly
+//CHECK 
+// /** 
+//  * Handle keyup Event
+//  */
+// CompEditTextWidget.prototype.handleKeyupEvent = function(event) {
+//     // Defer to Completion
+//     this._comp._onKeyUp(event, $tw.wiki.getTiddlers(),
+// 			this.domNodes[0], this.domNodes[1]); // ugly
 
-    this.saveChanges(this.domNodes[0].value); // ugly ?
-    this.fixHeight();
-    return true;
-};
-/**
- * Handle keypress.
- */
-CompEditTextWidget.prototype.handleKeypressEvent = function(event) {
-    // Defer to Completion
-    this._comp._onKeyPress(event,this.domNodes[0]); // ugly
-};
-/**
- * Handle keydown.
- */
-CompEditTextWidget.prototype.handleKeydownEvent = function(event) {
-    // Defer to Completion
-    this._comp._onKeyDown(event);
-};
+//     this.saveChanges(this.domNodes[0].value); // ugly ?
+//     this.fixHeight();
+//     return true;
+// };
+// /**
+//  * Handle keypress.
+//  */
+// CompEditTextWidget.prototype.handleKeypressEvent = function(event) {
+//     // Defer to Completion
+//     this._comp._onKeyPress(event,this.domNodes[0]); // ugly
+// };
+// /**
+//  * Handle keydown.
+//  */
+// CompEditTextWidget.prototype.handleKeydownEvent = function(event) {
+//     // Defer to Completion
+//     this._comp._onKeyDown(event);
+// };
 
 CompEditTextWidget.prototype.handleFocusEvent = function(event) {
-	if(this.editFocusPopup) {
-		$tw.popup.triggerPopup({
-			domNode: this.domNodes[0],
-			title: this.editFocusPopup,
-			wiki: this.wiki,
-			force: true
-		});
-	}
-	return true;
+    if(this.editFocusPopup) {
+	$tw.popup.triggerPopup({
+	    domNode: this.domNodes[0],
+	    title: this.editFocusPopup,
+	    wiki: this.wiki,
+	    force: true
+	});
+    }
+    return true;
 };
 
 CompEditTextWidget.prototype.saveChanges = function(text) {
@@ -382,19 +388,20 @@ CompEditTextWidget.prototype.saveChanges = function(text) {
 	}
 };
 
-CompEditTextWidget .prototype.getValue = function(value,attr) {
-    // If there is a config value in JSON
-    var config = this._configOptions.configuration || {};
-    if( !(attr in config) ) {
-	value = config[attr];
-    }
-    // If we still have no value
-    if(value === undefined) {
-	// Try to read from fallbacks
-	value = this._defaultOptions[attr];
-    }
-    return value;
-};
+//CHECK 
+// CompEditTextWidget.prototype.getValue = function(value,attr) {
+//     // If there is a config value in JSON
+//     var config = this._configOptions.configuration || {};
+//     if( !(attr in config) ) {
+// 	value = config[attr];
+//     }
+//     // If we still have no value
+//     if(value === undefined) {
+// 	// Try to read from fallbacks
+// 	value = this._defaultOptions[attr];
+//     }
+//     return value;
+// };
 
 // a new widget :o)
 exports["edit-comptext"] = CompEditTextWidget;
