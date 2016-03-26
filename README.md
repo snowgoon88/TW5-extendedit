@@ -3,7 +3,7 @@ TW5-extendedit
 
 Plugin to extend the editor of TiddlyWiki5 with 'link completion'.
 
-**NEW** define your own completion template 
+:zap: **NEW** :zap: define your own completion template 
 
 **Try it** at http://snowgoon88.github.io/TW5-extendedit
 
@@ -28,6 +28,7 @@ Dev
 
 Older Stuff
 -----------
+* 26/04/2016 : v0.5.0 Completion Templates
 * 07/03/2017 : v0.4.1 Fix small bug in naming config tiddler
 * 07/03/2017 : v0.4 Configuration in 'config' tiddler.
 * 29/02/2016 : v0.3 Can use CTRL+SPACE, UP/DOWN, ESC.
