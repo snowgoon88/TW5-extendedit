@@ -28,6 +28,7 @@ Dev
 
 Older Stuff
 -----------
+* 26/04/2016 : v0.5.0 Completion Templates
 * 07/03/2017 : v0.4.1 Fix small bug in naming config tiddler
 * 07/03/2017 : v0.4 Configuration in 'config' tiddler.
 * 29/02/2016 : v0.3 Can use CTRL+SPACE, UP/DOWN, ESC.
