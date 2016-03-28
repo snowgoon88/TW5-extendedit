@@ -54,13 +54,28 @@ var DEFATT = { maxMatch: 5, minPatLen: 2, caseSensitive: false };
 
 /** 
  * Struct for generic Completion Templates.
+ * <ul>
+ * <li>pat : pattern searched for.</li>
+ * <li>filter : filter operation used to find the list of completion options</li>
+ * <li>mask: replaced by "" when presenting completion options</li>
+ * </ul>
  */
 var Template = function( pat, filter, start, end ) {
     this.pat = pat;
     this.filter = filter;
+    this.mask = "^h";
+    this.field = "title";
     this.start = start;
     this.end = end;
     this.pos = 0;
+};
+/**
+ * Struct for storing completion options, as we need to memorise 
+ * the titles of the tiddlers when masked and when body must be displayed.
+ */
+var OptCompletion = function( title, str ) {
+    this.title = title;
+    this.str = str;
 };
 
 /**
@@ -79,7 +94,7 @@ var Completion = function( editWidget, areaNode, param ) {
     this._state = "VOID";
     this._template = undefined;
     /** Best matches */
-    this._bestMatches = [];
+    this._bestMatches = []; // An array of OptCompletion
     this._idxChoice = -1;
     /** Param */
     // maximum nb of match displayed
@@ -123,25 +138,33 @@ var Completion = function( editWidget, areaNode, param ) {
    
     /** 
      * Find the bestMatches among listChoice with given pattern
+     * @param listChoice : array of String
+     * @change : this._bestMatches => array of OptCompletion
      */
     this._findBestMatches = function( listChoice, pattern, nbMax) {
 	// regexp search pattern, case sensitive
 	var flagSearch = this._caseSensitive ? "" : "i" ;
 	var regpat = RegExp( regExpEscape(pattern), flagSearch );
+	var regMask = RegExp( this._template.mask ? this._template.mask : "","");
 	var nbMatch = 0;
 	// nbMax set to _maxMatch if no value given
 	nbMax = nbMax !== undefined ? nbMax : this._maxMatch;
+
+	//DEBUG console.log( "__FIND masked="+regMask+" regPat="+regpat);
 
 	this._bestMatches= [];
 	for( var i=0; i< listChoice.length; i++ ) {
 	    //DEBUG console.log( "__FIND: "+listChoice[i]+ " w "+pattern +" ?" );
 	    // is the regular expression found
-	    if( regpat.test( listChoice[i]) ) {
+	    // apply mask over potential choice
+	    var maskedChoice = listChoice[i].replace( regMask, "");
+	    //DEBUG console.log( "__CHOICE c="+listChoice[i]+" masked="+maskedChoice );
+	    if( regpat.test( maskedChoice ) ) {
 		if (nbMatch >= nbMax) {
-		    this._bestMatches.push( "..." );
+		    this._bestMatches.push( new OptCompletion("","...") );
 		    return;
 		} else {
-		    this._bestMatches.push( listChoice[i] );
+		    this._bestMatches.push( new OptCompletion(listChoice[i],maskedChoice) );
 		    nbMatch += 1;
 		}
 	    }
@@ -352,13 +375,13 @@ Completion.prototype.handleKeyup = function(event) {
     	    if( selected ) {
     		//DEBUG console.log( "   > selected" );
     		insertInto( this._areaNode,
-			    this._bestMatches[this._idxChoice],
+			    this._bestMatches[this._idxChoice].str,
 			    pattern.start, curPos, this._template );
 	    }
     	    else if( this._bestMatches.length === 1 ) {
     		//DEBUG console.log( "   > only one" );
     		insertInto( this._areaNode,
-			    this._bestMatches[0],
+			    this._bestMatches[0].str,
 			    pattern.start, curPos, this._template );
 	    }
 	    this._abortPattern( this._popNode );
@@ -396,7 +419,7 @@ Completion.prototype.handleKeyup = function(event) {
     		    if (this._bestMatches.length > 0) {
 			for( var i=0; i<this._bestMatches.length; i++) {
     			    this._popNode.appendChild( 
-				itemHTML(this._bestMatches[i], 
+				itemHTML(this._bestMatches[i].str,
 					 pattern.text));
     			}
 			this._display( this._areaNode, this._popNode );			
