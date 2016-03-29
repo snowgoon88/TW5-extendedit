@@ -1,0 +1,7 @@
+tags: $:stamp
+title: $:/plugins/snowgoon88/edit-comptext/stamp/macro
+type: text/vnd.tiddlywiki
+
+\def NewMacrobr>
+"Something usefull"<br>
+\end

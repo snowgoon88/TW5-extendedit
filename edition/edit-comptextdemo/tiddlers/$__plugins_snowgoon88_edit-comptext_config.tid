@@ -12,11 +12,17 @@ type: application/json
       "filter": "[all[tiddlers]!is[system]]",
       "start": "[[",
       "end": "]]"
-      }, {
-      "pattern": "<p",
+      },{
+      "patter n": "<p",
       "filter": "[tag[PNJ]!is[system]]",
       "start": "<<pnjin  \"",
       "end": "\">>"
-     }
+      },{
+      "pattern": "<<",
+      "body": "[tag[$:stamp]]",
+      "mask" : "$:/plugins/snowgoon88/edit-comptext/stamp/",
+      "start": "",
+      "end": ""
+      }
   ]
 }
