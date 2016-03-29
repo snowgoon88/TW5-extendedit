@@ -60,11 +60,11 @@ var DEFATT = { maxMatch: 5, minPatLen: 2, caseSensitive: false };
  * <li>mask: replaced by "" when presenting completion options</li>
  * </ul>
  */
-var Template = function( pat, filter, start, end ) {
+var Template = function( pat, filter, mask, field, start, end  ) {
     this.pat = pat;
     this.filter = filter;
-    this.mask = "^h";
-    this.field = "title";
+    this.mask = "^"+regExpEscape(mask);
+    this.field = field;
     this.start = start;
     this.end = end;
     this.pos = 0;
@@ -112,17 +112,34 @@ var Completion = function( editWidget, areaNode, param ) {
     	var idT;
     	for( idT=0; idT<param.template.length; idT++ ) {
     	    var temp = param.template[idT];
-    	    //DEBUG console.log( "__CONF : "+temp.pattern+":"+temp.filter+":"+temp.start+":"+temp.end );
-    	    this._listTemp.push( 
-    		new Template( temp.pattern, temp.filter,
-    			      temp.start, temp.end )
-    	    );
+	    // field 'body' ou 'title' (default)
+	    if( temp.body ) {		
+    		this._listTemp.push( 
+    		    new Template( temp.pattern, temp.body,
+				  temp.mask ? temp.mask : "",
+				  "body",
+    				  temp.start, temp.end )
+    		);
+	    }
+	    else {
+    		this._listTemp.push( 
+    		    new Template( temp.pattern, 
+				  temp.title ? temp.title : temp.filter,
+				  temp.mask ? temp.mask : "",
+				  "title",
+    				  temp.start, temp.end )
+    		);
+	    }
+	    //DEBUG temp = this._listTemp[this._listTemp.length-1];
+	    //DEBUG console.log( "__CONF : "+temp.pattern+":"+temp.filter+":"+temp.mask+":"+temp.field+":"+temp.start+":"+temp.end );
     	}
     }
     // or defaut template
     else {
     	this._listTemp = [
-    	    new Template( "[[", "[all[tiddlers]!is[system]]", "[[", "]]" )
+    	    new Template( "[[", "[all[tiddlers]!is[system]]", 
+			  "", "title",
+			  "[[", "]]" )
     	];
     }
     // Create Popup
@@ -374,14 +391,24 @@ Completion.prototype.handleKeyup = function(event) {
     	    //DEBUG console.log( "   > sel="+selected+" len="+this._bestChoices.length );
     	    if( selected ) {
     		//DEBUG console.log( "   > selected" );
+		var temp = this._bestMatches[this._idxChoice];
+		var str = temp.str;
+		if( this._template.field === "body" ) {
+		    str = $tw.wiki.getTiddlerText( temp.title );
+		}
     		insertInto( this._areaNode,
-			    this._bestMatches[this._idxChoice].str,
+			    str,
 			    pattern.start, curPos, this._template );
 	    }
     	    else if( this._bestMatches.length === 1 ) {
     		//DEBUG console.log( "   > only one" );
+		var temp = this._bestMatches[0];
+		var str = temp.str;
+		if( this._template.field === "body" ) {
+		    str = $tw.wiki.getTiddlerText( temp.title );
+		}
     		insertInto( this._areaNode,
-			    this._bestMatches[0].str,
+			    str,
 			    pattern.start, curPos, this._template );
 	    }
 	    this._abortPattern( this._popNode );
@@ -510,10 +537,12 @@ var itemHTML = function (text, input ) {
  * - posAfter : where the cursor currently is
  */
 var insertInto = function(node, text, posBefore, posAfter, template ) {
+    //DEBUG console.log( "__INSERT : "+template.pattern+":"+template.filter+":"+template.mask+":"+template.field+":"+template.start+":"+template.end );
     var val = node.value;
-    var sStart = template.start ? template.start : '[[';
-    var sEnd = template.end ? template.end : ']]';
+    var sStart = template.start !== undefined ? template.start : '[[';
+    var sEnd = template.end !== undefined ? template.end : ']]';
     var newVal = val.slice(0, posBefore) + sStart + text + sEnd + val.slice(posAfter);
+    //console.log("__INSERT s="+sStart+" e="+sEnd);
     //console.log ("__INSERT pb="+posBefore+" pa="+posAfter+" txt="+text);
     //console.log( "NEW VAL = "+newVal );
     // WARN : Directly modifie domNode.value.
