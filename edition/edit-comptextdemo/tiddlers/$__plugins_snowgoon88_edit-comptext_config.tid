@@ -13,7 +13,7 @@ type: application/json
       "start": "[[",
       "end": "]]"
       },{
-      "patter n": "<p",
+      "pattern": "<p",
       "filter": "[tag[PNJ]!is[system]]",
       "start": "<<pnjin  \"",
       "end": "\">>"
