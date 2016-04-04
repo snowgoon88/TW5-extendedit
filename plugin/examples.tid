@@ -3,7 +3,9 @@ title: $:/plugins/snowgoon88/edit-comptext/examples
 The configuration file [[$:/plugins/snowgoon88/edit-comptext/config]] allow you to use the completion plugin for various usages. Here are some examples...
 
 !! Link Completion
-The basic and default usage. Completion is triggered by '[[', the search is among all non-system tiddlers. When selected, the 'title' of the tiddler is inserted in the text, surrounded by '[[' and ']]'. This gives the following Completion Template.
+The basic and default usage. Completion is triggered by `[[`, the search is among all non-system tiddlers. When selected, the `title` of the tiddler is inserted in the text, surrounded by `[[` and `]]`. This gives the following Completion Template.
+
+
 ```
 {
       "pattern": "[[",
@@ -13,8 +15,10 @@ The basic and default usage. Completion is triggered by '[[', the search is amon
 }	     
 ```
 
+
 !! Special macro completion
-I have a 'pnjin' macro that is invoked by `<<pnjin "TiddlerPNJName">>` where 'TiddlerPNJName is a tiddler that hold data about a PNJ. I use tiddlywiki to organise my Role Playing Games campaigns. So, I want '<p' to trigger the completion. The search is among all non-system tiddlers tagged 'PNJ' and, once selected, the title of the tiddler must be inserted surrouned by '<<pnjin \"' and '\">>". So...
+I have a 'pnjin' macro that is invoked by `<<pnjin "TiddlerPNJName">>` where 'TiddlerPNJName is a tiddler that hold data about a PNJ. I use tiddlywiki to organise my Role Playing Games campaigns. So, I want `<p` to trigger the completion. The search is among all non-system tiddlers tagged `PNJ` and, once selected, the title of the tiddler must be inserted surrouned by `<<pnjin \"` and `\">>`. So...
+
 ```
 {
 	"pattern": "<p",
@@ -25,7 +29,8 @@ I have a 'pnjin' macro that is invoked by `<<pnjin "TiddlerPNJName">>` where 'Ti
 ```
 
 !! Insert some templates or stamp or snippets into text.
-I frequently use some text pattern and I want to insert them easily. So, I have created several tiddlers, tagged '$:stamp' and in their body are the piece of texte I want to insert. The titles of these tiddlers always start with '$:/config/stamp/' (i.e. $:/config/stamp/macro, $:/config/stamp/list1, $:/config/stamp/list2). I want to trigger the completion by using '<<', then I only want to chose among the last part of the titles of tiddlers tagged '$:stamp' so I use a mask ('$:/config/stamp/) to only display the last part of the tiddlers title. When selectected, the ''body' of the tiddler is inserted, with no surrounding strings. As a results, the Completion Template is (notice the 'body' field):
+I frequently use some text pattern and I want to insert them easily. So, I could create several tiddlers, tagged '$:stamp' and in their body are the piece of texte I want to insert. The titles of these tiddlers always start with `$:/config/stamp/` (i.e. $:/config/stamp/macro, $:/config/stamp/list1, $:/config/stamp/list2). I want to trigger the completion by using `<<`, then I only want to chose among the last part of the titles of tiddlers tagged `$:stamp` so I use a mask (`$:/config/stamp/`) to only display the last part of the tiddlers title. When selectected, the `body` of the tiddler is inserted, with no surrounding strings. As a results, the Completion Template is (notice the `body` field):
+
 ```
 {
       "pattern": "<<",
@@ -37,6 +42,6 @@ I frequently use some text pattern and I want to insert them easily. So, I have 
 ```
 
 !! And you ?
-If you have funny usage of completion, let me know. If you'd like to do something that is not yet possible, let me know...
+If you have funny usages of completion, let me know. If you'd like to do something that is not yet possible, let me know...
 
 mail : snowgoon88(AT)gmail(DOT)com

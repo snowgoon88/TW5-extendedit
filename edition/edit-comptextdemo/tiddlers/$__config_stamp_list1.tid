@@ -1,5 +1,5 @@
 tags: $:stamp
-title: $:/plugins/snowgoon88/edit-comptext/stamp/list1
+title: $:/config/stamp/list1
 type: text/vnd.tiddlywiki
 
 <$list filter="[tag[$:stamp]sort[]]">

@@ -20,7 +20,7 @@ type: application/json
       },{
       "pattern": "<<",
       "body": "[tag[$:stamp]]",
-      "mask" : "$:/plugins/snowgoon88/edit-comptext/stamp/",
+      "mask" : "$:/config/stamp/",
       "start": "",
       "end": ""
       }

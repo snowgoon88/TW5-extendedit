@@ -1,5 +1,5 @@
 tags: $:stamp
-title: $:/plugins/snowgoon88/edit-comptext/stamp/list2
+title: $:/config/stamp/list2
 type: text/vnd.tiddlywiki
 
 \define subpart(tid:"TODO")

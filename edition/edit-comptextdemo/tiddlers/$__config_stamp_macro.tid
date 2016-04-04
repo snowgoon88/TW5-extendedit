@@ -1,5 +1,5 @@
 tags: $:stamp
-title: $:/plugins/snowgoon88/edit-comptext/stamp/macro
+title: $:/config/stamp/macro
 type: text/vnd.tiddlywiki
 
 \def NewMacrobr>
