@@ -2,7 +2,7 @@ title: $:/plugins/snowgoon88/edit-comptext/usage
 
 ''Important'' : be sure that in `$:/ControlPanel -> Advanced -> Editor Type -> text/vnd.tiddlywiki` you have chosen `comptext` instead of `text`.
 
-Configuration of the edit-comptext plugin can be done through the tiddler [[$:/plugins/snowgoon88/edit-comptext/config]]. Use a JSON tiddler (do not forget to set the type to `application/json`.
+Configuration of the edit-comptext plugin can be done through the tiddler [[$:/plugins/snowgoon88/edit-comptext/config]]. Use a JSON tiddler (do not forget to set the type to `application/json`. See some examples at [[$:/plugins/snowgoon88/edit-comptext/examples]]
 
 In the `configuration` object you can set :
 
@@ -13,7 +13,7 @@ In the `configuration` object you can set :
 In the `template` array you can specify the various completion templates that will be used. Every template can have the following members.
 
 * `pattern` : `string` (pattern that triggers a completion, default "[[" )
-* `filter` : `string` (the filter opertators that gives the list of valid completions, default "[all[tiddlers]!is[system]]")
+* `title` or `body`: `string` (the filter operators that gives the list of valid completions, default "[all[tiddlers]!is[system]]"). If you specify `body`, then the body of the tiddler will be inserted on selection.
 * `start` : `string` (when completion is chosen, start is put before the completion, default "[[")
 * `end` : `string` (when completion is chosen, end is put after the completion, default "]]")
 

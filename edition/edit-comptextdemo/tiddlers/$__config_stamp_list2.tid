@@ -1,0 +1,8 @@
+tags: $:stamp
+title: $:/config/stamp/list2
+type: text/vnd.tiddlywiki
+
+\define subpart(tid:"TODO")
+!! <$link>{{[[$tid$]]!!title}}</$link>
+{{$tid$}}
+\end
