@@ -2,6 +2,6 @@ tags: $:stamp
 title: $:/config/stamp/macro
 type: text/vnd.tiddlywiki
 
-\def NewMacrobr>
-"Something usefull"<br>
+\def NewMacro
+"Something usefull"
 \end

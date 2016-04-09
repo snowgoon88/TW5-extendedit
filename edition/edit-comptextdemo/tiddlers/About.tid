@@ -1,9 +1,9 @@
 title: About the Edit-CompText plugin
 type: text/vnd.tiddlywiki
 
-In editarea of the 'text' field, some ''trigger pattern'' (by default '[[') enters the ''completion mode'' and any subsequent alphanumeric character suggests completion possibilities in overlay. The completion is looked over all Tiddlers with a title that matches the pattern entered, according to the filter operation of the completion template ('[all[tiddlers]!is[system]]' by default) and, possibly, a mask. When a completion has been selected, the ''title'' (or sometimes the ''body'') of the selected Tiddler replaces the pattern. By default, it is surrounded by '[[' and ']]'.
+In editarea of the 'text' field, some ''trigger pattern'' (by default `[[`) enters the ''completion mode'' and any subsequent alphanumeric character suggests completion possibilities in overlay. The completion is looked over all Tiddlers with a title that matches the pattern entered, according to the filter operation of the completion template (`[all[tiddlers]!is[system]]` by default) and, possibly, a mask. When a completion has been selected, the ''title'' (or sometimes the ''body'') of the selected Tiddler replaces the pattern. By default, it is surrounded by `[[` and `]]`.
 
-* The pattern taken into account is the text between the trigger ('[[') and the cursor.
+* The pattern taken into account is the text between the trigger (`[[`) and the cursor.
 * ENTER, when only one possible completion, completes the link
 * when a popup window is visible, UP/DOWN allow to choose a link that is selected with ENTER.
 * CTRL+SPACE takes you into completion mode (if possible)
@@ -19,7 +19,7 @@ FYI, a list of already created tiddlers : hisOne, hisTwo, myOne, myTwo, myThree,
 
 I have also created a global macro named `pnjin` and tagged some tiddlers with ''PNJ'', so in edit mode, `<phisO+ENTER` should also complete to `<<pnjin "hisOne">>`. (yeah, my main motivation was dealing with a huge amount of PNJs when I use TW5 as a RPG campaign aid.)
 
-And, as an added bonus, various ''stamp'' tiddlers have been defined and tagged with ''$:stamp''. They all have titles that begins with '$:/plugins/snowgoon88/edit-comptext/stamp/'. That way, you can try ''stamping''. The trigger is '<<' and then you have 'macro', 'list1', 'list2'.
+And, as an added bonus, various ''stamp'' tiddlers have been defined and tagged with ''$:stamp''. They all have titles that begins with `$:/config/stamp/`. That way, you can try ''stamping''. The trigger is `<<` and then you have 'macro', 'list1', 'list2'.
 
 !! Install
 To add the ''bare'' plugin to your own TiddlyWiki5, just drag this link to the browser window:
