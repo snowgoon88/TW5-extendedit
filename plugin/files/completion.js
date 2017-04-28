@@ -82,13 +82,18 @@ var OptCompletion = function( title, str ) {
  * Widget is needed in creating popupNode.
  * - widget.document
  * - widget.wiki.filterTiddlers(...)
+ * - sibling : where to create the popup in the DOM.
  */
-var Completion = function( editWidget, areaNode, param ) {
+	var Completion = function( editWidget, areaNode, param, sibling, offTop, offLeft ) {
+	console.log( "==Completion::creation" );
 
     // About underlying Widget
     this._widget = editWidget;
-    this._areaNode = areaNode;
-    
+	this._areaNode = areaNode;
+	this._sibling  = (typeof sibling !== 'undefined') ?  sibling : this._areaNode;
+	this._offTop = (typeof offTop !== 'undefined') ?  offTop : 0;
+	this._offLeft = (typeof offLeft !== 'undefined') ?  offLeft : 0;	
+		
     // Completions attributes
     /** State */
     this._state = "VOID";
@@ -143,7 +148,8 @@ var Completion = function( editWidget, areaNode, param ) {
     	];
     }
     // Create Popup
-    this._popNode = createPopup(this._widget, this._areaNode );
+	//this._popNode = createPopup(this._widget, this._areaNode );
+	this._popNode = createPopup(this._widget, this._sibling );	
     
     // Listen to the Keyboard
     $tw.utils.addEventListeners( this._areaNode,[
@@ -240,8 +246,8 @@ var Completion = function( editWidget, areaNode, param ) {
             var styleSize = getComputedStyle(areaNode).getPropertyValue('font-size');
             var fontSize = parseFloat(styleSize); 
 		
-	    popupNode.style.left = (areaNode.offsetLeft-areaNode.scrollLeft+coord.left) + 'px';
-	    popupNode.style.top = (areaNode.offsetTop-areaNode.scrollTop+coord.top+fontSize*2) + 'px';
+	    popupNode.style.left = (this._offLeft+areaNode.offsetLeft-areaNode.scrollLeft+coord.left) + 'px';
+	    popupNode.style.top = (this._offTop+areaNode.offsetTop-areaNode.scrollTop+coord.top+fontSize*2) + 'px';
 	    popupNode.style.display = 'block';
 	}
     };
