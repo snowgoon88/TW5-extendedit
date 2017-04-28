@@ -2,10 +2,10 @@
 ** ajouter save après "insertInto" de completion.js
 this._widget.xxxx
 
-* [1/2] Toolbar
+* [4/4] Toolbar
 2 engine qui sont chargé avec factory.js
-** TODO [1/6] essayer dans framed.js
-*** TODO BUG : tient pas compte des CSS
+** DONE [6/6] essayer dans framed.js
+*** DONE BUG : tient pas compte des CSS
 **** CSS
 element {
     display: block;
@@ -83,8 +83,10 @@ element {
     display: none;
     position: absolute;
 }
-*** TODO BUG : les items dans le popup n'ont pas le bon style
-*** TODO BUG : le popup est limité par la taille du iframe (coupé en bas)
-*** TODO BUG : les flèches ne marchent pas
-*** TODO POSS : popup hors du iframe mais avec offset ?
+*** DONE BUG : les items dans le popup n'ont pas le bon style
+*** DONE BUG : le popup est limité par la taille du iframe (coupé en bas)
+*** DONE BUG : les flèches ne marchent pas
+*** DONE POSS : popup hors du iframe mais avec offset ?
+** DONE essayer dans simple.js
+** DONE et modifier edit-text.js -> edit-comptext.js 
 ** DONE Mais voir dans les mails du newsgroup

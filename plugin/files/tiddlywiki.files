@@ -1,6 +1,20 @@
 {
 	"tiddlers": [
 		{
+			"file": "framed.js",
+			"fields": {
+				  "type": "application/javascript",
+				  "title": "$:/plugins/snowgoon88/edit-comptext/framed.js",
+				  "module-type": "library"
+			}
+		},{
+			"file": "simple.js",
+			"fields": {
+				  "type": "application/javascript",
+				  "title": "$:/plugins/snowgoon88/edit-comptext/simple.js",
+				  "module-type": "library"
+			}
+		},{
 			"file": "cursor-position.js",
 			"fields": {
 				  "type": "application/javascript",
