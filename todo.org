@@ -1,0 +1,90 @@
+* Sauver à chaque changement
+** ajouter save après "insertInto" de completion.js
+this._widget.xxxx
+
+* [1/2] Toolbar
+2 engine qui sont chargé avec factory.js
+** TODO [1/6] essayer dans framed.js
+*** TODO BUG : tient pas compte des CSS
+**** CSS
+element {
+    display: block;
+    position: absolute;
+    left: 23px;
+    top: 31px;
+}
+**** CSS Path
+html body div.tc-block-dropdown.ect-block-dropdown
+**** CSS Selector
+.tc-block-dropdown
+**** OuterHTML
+<div style="display: block; position: absolute; left: 23px; top: 31px;" class="tc-block-dropdown ect-block-dropdown"><li patt-selected="false"><mark>hi</mark>sFive</li><li patt-selected="false"><mark>hi</mark>sFor</li><li patt-selected="false"><mark>hi</mark>sOne</li><li patt-selected="false"><mark>hi</mark>sSix</li><li patt-selected="false"><mark>hi</mark>sThree</li><li patt-selected="false"><mark>hi</mark>sTwo</li></div>
+**** InnerHTML
+<li patt-selected="false"><mark>hi</mark>sFive</li><li patt-selected="false"><mark>hi</mark>sFor</li><li patt-selected="false"><mark>hi</mark>sOne</li><li patt-selected="false"><mark>hi</mark>sSix</li><li patt-selected="false"><mark>hi</mark>sThree</li><li patt-selected="false"><mark>hi</mark>sTwo</li>
+*** DONE POSS : créer un dummyPopup avec les styles et copier ces styles
+**** copier
+/*
+Copy styles from the dummy text area to the textarea in the iframe
+*/
+FramedEngine.prototype.copyStyles = function() {
+	// Copy all styles
+	$tw.utils.copyStyles(this.dummyTextArea,this.domNode);
+	// Override the ones that should not be set the same as the dummy textarea
+	this.domNode.style.display = "block";
+	this.domNode.style.width = "100%";
+	this.domNode.style.margin = "0";
+	// In Chrome setting -webkit-text-fill-color overrides the placeholder text colour
+	this.domNode.style["-webkit-text-fill-color"] = "currentcolor";
+};
+**** outside style
+element {
+    display: none;
+    position: absolute;
+}
+.tc-block-dropdown {
+    position: absolute;
+    min-width: 220px;
+    border: 1px solid #bbb;
+    background-color: #ffffff;
+    padding: 7px 0;
+    margin: 4px 0 0 0;
+    white-space: nowrap;
+    z-index: 1000;
+    text-shadow: none;
+}
+.tc-block-dropdown {
+    border-radius: 4px;
+    -webkit-box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+}
+*, input[type="search"] {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+body.tc-body {
+    font-size: 14px;
+    line-height: 20px;
+    color: #333333;
+    fill: #333333;
+    word-wrap: break-word;
+}
+html {
+    font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", "DejaVu Sans", sans-serif;
+    text-rendering: optimizeLegibility;
+}
+html {
+    font-family: sans-serif;
+    -webkit-text-size-adjust: 100%;
+}
+**** Inside style
+element {
+    display: none;
+    position: absolute;
+}
+*** TODO BUG : les items dans le popup n'ont pas le bon style
+*** TODO BUG : le popup est limité par la taille du iframe (coupé en bas)
+*** TODO BUG : les flèches ne marchent pas
+*** TODO POSS : popup hors du iframe mais avec offset ?
+** DONE Mais voir dans les mails du newsgroup
