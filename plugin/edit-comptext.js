@@ -25,6 +25,6 @@ var editTextWidgetFactory = require("$:/core/modules/editor/factory.js").editTex
 	FramedCompEngine = require("$:/plugins/snowgoon88/edit-comptext/framed.js").FramedCompEngine,
 	SimpleCompEngine = require("$:/plugins/snowgoon88/edit-comptext/simple.js").SimpleCompEngine;
 
-exports["edit-text"] = editTextWidgetFactory(FramedCompEngine,SimpleCompEngine);
+exports["edit-comptext"] = editTextWidgetFactory(FramedCompEngine,SimpleCompEngine);
 
 })();
