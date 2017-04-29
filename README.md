@@ -30,6 +30,7 @@ Older Stuff
 -----------
 * 28/05/2017 : v0.7.0 compatible with toolbar text editor
 * 04/05/2016 : v0.6.1 self-sufficient module, use of body of tiddlers
+** available at http://snowgoon88.github.io/TW5-extendedit/index_5.1.08.html
 * 26/04/2016 : v0.5.0 Completion Templates
 * 07/03/2017 : v0.4.1 Fix small bug in naming config tiddler
 * 07/03/2017 : v0.4 Configuration in 'config' tiddler.
