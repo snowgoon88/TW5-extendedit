@@ -1,6 +1,8 @@
 title: About the Edit-CompText plugin
 type: text/vnd.tiddlywiki
 
+''Updated to match version 5.1.13+ of TiddlyWiki''
+
 In editarea of the 'text' field, some ''trigger pattern'' (by default `[[`) enters the ''completion mode'' and any subsequent alphanumeric character suggests completion possibilities in overlay. The completion is looked over all Tiddlers with a title that matches the pattern entered, according to the filter operation of the completion template (`[all[tiddlers]!is[system]]` by default) and, possibly, a mask. When a completion has been selected, the ''title'' (or sometimes the ''body'') of the selected Tiddler replaces the pattern. By default, it is surrounded by `[[` and `]]`.
 
 * The pattern taken into account is the text between the trigger (`[[`) and the cursor.
