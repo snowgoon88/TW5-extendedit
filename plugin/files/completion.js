@@ -405,6 +405,8 @@ Completion.prototype.handleKeyup = function(event) {
     		insertInto( this._areaNode,
 			    str,
 			    pattern.start, curPos, this._template );
+		// save this new content
+		this._widget.saveChanges( this._areaNode.value );
 	    }
     	    else if( this._bestMatches.length === 1 ) {
     		//DEBUG console.log( "   > only one" );
@@ -416,6 +418,8 @@ Completion.prototype.handleKeyup = function(event) {
     		insertInto( this._areaNode,
 			    str,
 			    pattern.start, curPos, this._template );
+		// save this new content
+		this._widget.saveChanges( this._areaNode.value );
 	    }
 	    this._abortPattern( this._popNode );
 		//DEBUG this._logStatus( "" );
