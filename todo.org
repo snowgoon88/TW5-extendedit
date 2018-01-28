@@ -1,4 +1,4 @@
-* TODO Check BUG entre minPatLength => minPatLen (#7)
+* DONE Check BUG entre minPatLength => minPatLen (#7)
 * DONE ENTER take fisrt choice by DEFAULT
 * DONE Dans l'ordre des choix proposé, d'abord ceux qui commencent par pattern
 * DONE Sauver à chaque changement

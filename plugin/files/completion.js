@@ -50,7 +50,7 @@ TODO : CHECK if needed
 var getCaretCoordinates = require("$:/plugins/snowgoon88/edit-comptext/cursor-position.js");
 
 /** Default Completion Attributes */
-var DEFATT = { maxMatch: 5, minPatLen: 2, caseSensitive: false };
+var DEFATT = { maxMatch: 5, minPatLength: 2, caseSensitive: false };
 
 /** 
  * Struct for generic Completion Templates.
@@ -104,7 +104,7 @@ var OptCompletion = function( title, str ) {
     /** Param */
     // maximum nb of match displayed
     this._maxMatch     = param.configuration.maxMatch || DEFATT.maxMatch;   
-    this._minPatLen    = param.configuration.minPatLen || DEFATT.minPatLen;
+    this._minPatLength    = param.configuration.minPatLength || DEFATT.minPatLength;
     this._caseSensitive= param.configuration.caseSensitive || DEFATT.caseSensitive;
     /** Input information */
     this._lastChar = "";
@@ -463,7 +463,7 @@ Completion.prototype.handleKeyup = function(event) {
     		// log
 		//DEBUG this._logStatus( pattern.text );
     		// Popup with choices if pattern at least minPatLen letters long
-		if( pattern.text.length > (this._minPatLen-1) ) {
+		if( pattern.text.length > (this._minPatLength-1) ) {
 		    // compute listOptions from templateFilter
 		    var allOptions;
 		    if( this._template )
