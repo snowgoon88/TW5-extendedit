@@ -168,6 +168,7 @@ var OptCompletion = function( title, str ) {
 	// regexp search pattern, case sensitive
 	var flagSearch = this._caseSensitive ? "" : "i" ;
 	var regpat = RegExp( regExpEscape(pattern), flagSearch );
+	var regpat_start = RegExp( "^"+regExpEscape(pattern), flagSearch );
 	var regMask = RegExp( this._template.mask ? this._template.mask : "","");
 	var nbMatch = 0;
 	// nbMax set to _maxMatch if no value given
@@ -176,13 +177,14 @@ var OptCompletion = function( title, str ) {
 	//DEBUG console.log( "__FIND masked="+regMask+" regPat="+regpat);
 
 	this._bestMatches= [];
+	var otherMatches = [];
+	// We test every possible choice
 	for( var i=0; i< listChoice.length; i++ ) {
-	    //DEBUG console.log( "__FIND: "+listChoice[i]+ " w "+pattern +" ?" );
-	    // is the regular expression found
 	    // apply mask over potential choice
 	    var maskedChoice = listChoice[i].replace( regMask, "");
-	    //DEBUG console.log( "__CHOICE c="+listChoice[i]+" masked="+maskedChoice );
-	    if( regpat.test( maskedChoice ) ) {
+	    // Test first if pattern is found at START of the maskedChoice
+	    // THEN added to BestMatches
+ 	    if( regpat_start.test( maskedChoice )) {
 		if (nbMatch >= nbMax) {
 		    this._bestMatches.push( new OptCompletion("","...") );
 		    return;
@@ -191,7 +193,24 @@ var OptCompletion = function( title, str ) {
 		    nbMatch += 1;
 		}
 	    }
+	    // then if pattern is found WITHIN the maskedChoice
+	    // added AFTER the choices that starts with pattern
+	    else if( regpat.test( maskedChoice ) ) {
+		if (nbMatch >= nbMax) {
+		    // add all otherMatches to _bestMatches
+		    this._bestMatches.push( new OptCompletion("","<hr>") ) ; //separator
+		    this._bestMatches = this._bestMatches.concat( otherMatches );
+		    this._bestMatches.push( new OptCompletion("","...") );
+		    return;
+		} else {
+		    otherMatches.push( new OptCompletion(listChoice[i],maskedChoice) );
+		    nbMatch += 1;
+		}
+	    }
 	}
+	// Here, must add the otherMatches
+	this._bestMatches.push( new OptCompletion("","<hr>") ) ; //separator
+	this._bestMatches = this._bestMatches.concat( otherMatches );
     };
     /**
      * Change Selected Status of Items
