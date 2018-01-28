@@ -1,3 +1,7 @@
+* make possible to use regexp
+* [0/2] stamping
+** TODO better explanation
+** TODO change pattern from '<<' to '%%' (for example)
 * DONE Check BUG entre minPatLength => minPatLen (#7)
 * DONE ENTER take fisrt choice by DEFAULT
 * DONE Dans l'ordre des choix proposé, d'abord ceux qui commencent par pattern
