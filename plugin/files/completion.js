@@ -427,8 +427,9 @@ Completion.prototype.handleKeyup = function(event) {
 		// save this new content
 		this._widget.saveChanges( this._areaNode.value );
 	    }
-    	    else if( this._bestMatches.length === 1 ) {
-    		//DEBUG console.log( "   > only one" );
+	    // otherwise take the first choice (if exists)
+	    else if( this._bestMatches.length > 0 ) {
+    		//DEBUG console.log( "   > take first one" );
 		var temp = this._bestMatches[0];
 		var str = temp.str;
 		if( this._template.field === "body" ) {
