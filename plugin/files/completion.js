@@ -304,7 +304,13 @@ Completion.prototype.handleKeydown = function(event) {
 Completion.prototype.handleInput = function(event) {
     this._hasInput = true;
     //DEBUG console.log( "__INPUT hasI="+this._hasInput );
-};	
+};
+
+Completion.prototype.isCompletionTriggered = function(event) {
+	let key = event.keyCode || event.which;
+	return key === 32 && event.ctrlKey && event.shiftKey;
+};
+	
 /**
  * Set _lastChar, detects CTRL+SPACE.
  */
@@ -319,7 +325,7 @@ Completion.prototype.handleKeypress = function(event) {
     //DEBUG this._logStatus( "KEYPRESS" );
     
     // Detect Ctrl+Space
-    if( key === 32 && event.ctrlKey && this._state === "VOID" ) {
+    if( this.isCompletionTriggered(event) && this._state === "VOID" ) {
 	//Find a proper Template
 	// first from which we can extract a pattern
 	if( this._template === undefined ) {
