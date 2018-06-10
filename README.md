@@ -33,6 +33,7 @@ Older Stuff
 -----------
 * 10/06/2018 : v0.8.0 config triggerKeys and FIX partial completion
 * 28/05/2017 : v0.7.0 compatible with toolbar text editor
+  * available at http://snowgoon88.github.io/TW5-extendedit/index_5.1.13.html
 * 04/05/2016 : v0.6.1 self-sufficient module, use of body of tiddlers
   * available at http://snowgoon88.github.io/TW5-extendedit/index_5.1.08.html
 
