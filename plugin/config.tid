@@ -5,7 +5,8 @@ title: $:/plugins/snowgoon88/edit-comptext/config
   "configuration": {
       "caseSensitive" : false,
       "maxMatch" : 8,
-      "minPatLength" : 2
+      "minPatLength" : 2,
+      "triggerKeyCombination" : "^ "
   },
   "template": [{
       "pattern": "[[",
