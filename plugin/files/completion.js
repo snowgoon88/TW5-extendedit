@@ -50,7 +50,7 @@ TODO : CHECK if needed
 var getCaretCoordinates = require("$:/plugins/snowgoon88/edit-comptext/cursor-position.js");
 
 /** Default Completion Attributes */
-var DEFATT = { maxMatch: 5, minPatLen: 2, caseSensitive: false };
+var DEFATT = { maxMatch: 5, minPatLen: 2, caseSensitive: false, triggerKeyCombination: "^ " };
 
 /** 
  * Struct for generic Completion Templates.
@@ -76,6 +76,37 @@ var Template = function( pat, filter, mask, field, start, end  ) {
 var OptCompletion = function( title, str ) {
     this.title = title;
     this.str = str;
+};
+
+var keyMatchGenerator = function(combination) {
+	let singleMatchGenerator = function(character) {
+		if (character === '^') {
+			return event => event.ctrlKey;
+		}
+		else if (character === '+') {
+			return event => event.shiftKey;
+		}
+		else if (character === '!') {
+			return event => event.altKey;
+		}
+		else {
+			return event => (event.keyCode || event.which) === character.charCodeAt(0);
+		}
+	};
+
+	let matchers = [];
+	for (let i = 0; i < combination.length; i++) {
+		matchers.push(singleMatchGenerator(combination[i]));
+	}
+
+	return event => {
+		for (let i = 0; i < matchers.length; i++) {
+			if (!matchers[i](event)) {
+				return false;
+			}
+		}
+		return true;
+	};
 };
 
 /**
@@ -105,7 +136,8 @@ var OptCompletion = function( title, str ) {
     // maximum nb of match displayed
     this._maxMatch     = param.configuration.maxMatch || DEFATT.maxMatch;   
     this._minPatLen    = param.configuration.minPatLen || DEFATT.minPatLen;
-    this._caseSensitive= param.configuration.caseSensitive || DEFATT.caseSensitive;
+	this._caseSensitive= param.configuration.caseSensitive || DEFATT.caseSensitive;
+	this._triggerKeyMatcher = keyMatchGenerator(param.configuration.triggerKeyCombination || DEFATT.triggerKeyCombination);
     /** Input information */
     this._lastChar = "";
     this._hasInput = false;
@@ -304,7 +336,8 @@ Completion.prototype.handleKeydown = function(event) {
 Completion.prototype.handleInput = function(event) {
     this._hasInput = true;
     //DEBUG console.log( "__INPUT hasI="+this._hasInput );
-};	
+};
+	
 /**
  * Set _lastChar, detects CTRL+SPACE.
  */
@@ -319,7 +352,7 @@ Completion.prototype.handleKeypress = function(event) {
     //DEBUG this._logStatus( "KEYPRESS" );
     
     // Detect Ctrl+Space
-    if( key === 32 && event.ctrlKey && this._state === "VOID" ) {
+    if( this._triggerKeyMatcher(event) && this._state === "VOID" ) {
 	//Find a proper Template
 	// first from which we can extract a pattern
 	if( this._template === undefined ) {
