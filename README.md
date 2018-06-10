@@ -3,7 +3,7 @@ TW5-extendedit
 
 Plugin to extend the editor of TiddlyWiki5 with 'link completion'.
 
-:zap: **NEW** :zap: Updated to use the new toolbar text editor of TW5.1.13
+:zap: **NEW** :zap: configure your trigger keys (thanks [zimiarh](https://github.com/zimiarh) )
 
 **Try it** at http://snowgoon88.github.io/TW5-extendedit
 
@@ -26,11 +26,16 @@ Dev
 * Create a local dev_rep `nodejs ./tiddlywiki.js dev_rep --init edit-comptextdev `
 * Run local server `nodejs ./tiddlywiki.js dev_rep --server`
 
+### Contributors
+* [zimiarh](https://github.com/zimiarh)
+
 Older Stuff
 -----------
+* 10/06/2018 : v0.8.0 config triggerKeys and FIX partial completion
 * 28/05/2017 : v0.7.0 compatible with toolbar text editor
 * 04/05/2016 : v0.6.1 self-sufficient module, use of body of tiddlers
-** available at http://snowgoon88.github.io/TW5-extendedit/index_5.1.08.html
+  * available at http://snowgoon88.github.io/TW5-extendedit/index_5.1.08.html
+
 * 26/04/2016 : v0.5.0 Completion Templates
 * 07/03/2017 : v0.4.1 Fix small bug in naming config tiddler
 * 07/03/2017 : v0.4 Configuration in 'config' tiddler.
