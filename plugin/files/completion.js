@@ -50,7 +50,7 @@ TODO : CHECK if needed
 var getCaretCoordinates = require("$:/plugins/snowgoon88/edit-comptext/cursor-position.js");
 
 /** Default Completion Attributes */
-var DEFATT = { maxMatch: 5, minPatLen: 2, caseSensitive: false };
+var DEFATT = { maxMatch: 5, minPatLen: 2, caseSensitive: false, triggerKeyCombination: "^ " };
 
 /** 
  * Struct for generic Completion Templates.
@@ -76,6 +76,37 @@ var Template = function( pat, filter, mask, field, start, end  ) {
 var OptCompletion = function( title, str ) {
     this.title = title;
     this.str = str;
+};
+
+var keyMatchGenerator = function(combination) {
+	let singleMatchGenerator = function(character) {
+		if (character === '^') {
+			return event => event.ctrlKey;
+		}
+		else if (character === '+') {
+			return event => event.shiftKey;
+		}
+		else if (character === '!') {
+			return event => event.altKey;
+		}
+		else {
+			return event => (event.keyCode || event.which) === character.charCodeAt(0);
+		}
+	};
+
+	let matchers = [];
+	for (let i = 0; i < combination.length; i++) {
+		matchers.push(singleMatchGenerator(combination[i]));
+	}
+
+	return event => {
+		for (let i = 0; i < matchers.length; i++) {
+			if (!matchers[i](event)) {
+				return false;
+			}
+		}
+		return true;
+	};
 };
 
 /**
@@ -106,6 +137,7 @@ var OptCompletion = function( title, str ) {
     this._maxMatch     = param.configuration.maxMatch || DEFATT.maxMatch;   
     this._minPatLen    = param.configuration.minPatLen || DEFATT.minPatLen;
     this._caseSensitive= param.configuration.caseSensitive || DEFATT.caseSensitive;
+    this._triggerKeyMatcher = keyMatchGenerator(param.configuration.triggerKeyCombination || DEFATT.triggerKeyCombination);
     /** Input information */
     this._lastChar = "";
     this._hasInput = false;
@@ -168,6 +200,7 @@ var OptCompletion = function( title, str ) {
 	// regexp search pattern, case sensitive
 	var flagSearch = this._caseSensitive ? "" : "i" ;
 	var regpat = RegExp( regExpEscape(pattern), flagSearch );
+	var regpat_start = RegExp( "^"+regExpEscape(pattern), flagSearch );
 	var regMask = RegExp( this._template.mask ? this._template.mask : "","");
 	var nbMatch = 0;
 	// nbMax set to _maxMatch if no value given
@@ -176,13 +209,14 @@ var OptCompletion = function( title, str ) {
 	//DEBUG console.log( "__FIND masked="+regMask+" regPat="+regpat);
 
 	this._bestMatches= [];
+	var otherMatches = [];
+	// We test every possible choice
 	for( var i=0; i< listChoice.length; i++ ) {
-	    //DEBUG console.log( "__FIND: "+listChoice[i]+ " w "+pattern +" ?" );
-	    // is the regular expression found
 	    // apply mask over potential choice
 	    var maskedChoice = listChoice[i].replace( regMask, "");
-	    //DEBUG console.log( "__CHOICE c="+listChoice[i]+" masked="+maskedChoice );
-	    if( regpat.test( maskedChoice ) ) {
+	    // Test first if pattern is found at START of the maskedChoice
+	    // THEN added to BestMatches
+ 	    if( regpat_start.test( maskedChoice )) {
 		if (nbMatch >= nbMax) {
 		    this._bestMatches.push( new OptCompletion("","...") );
 		    return;
@@ -191,7 +225,24 @@ var OptCompletion = function( title, str ) {
 		    nbMatch += 1;
 		}
 	    }
+	    // then if pattern is found WITHIN the maskedChoice
+	    // added AFTER the choices that starts with pattern
+	    else if( regpat.test( maskedChoice ) ) {
+		if (nbMatch >= nbMax) {
+		    // add all otherMatches to _bestMatches
+		    this._bestMatches.push( new OptCompletion("","<hr>") ) ; //separator
+		    this._bestMatches = this._bestMatches.concat( otherMatches );
+		    this._bestMatches.push( new OptCompletion("","...") );
+		    return;
+		} else {
+		    otherMatches.push( new OptCompletion(listChoice[i],maskedChoice) );
+		    nbMatch += 1;
+		}
+	    }
 	}
+	// Here, must add the otherMatches
+	this._bestMatches.push( new OptCompletion("","<hr>") ) ; //separator
+	this._bestMatches = this._bestMatches.concat( otherMatches );
     };
     /**
      * Change Selected Status of Items
@@ -304,7 +355,8 @@ Completion.prototype.handleKeydown = function(event) {
 Completion.prototype.handleInput = function(event) {
     this._hasInput = true;
     //DEBUG console.log( "__INPUT hasI="+this._hasInput );
-};	
+};
+	
 /**
  * Set _lastChar, detects CTRL+SPACE.
  */
@@ -319,7 +371,7 @@ Completion.prototype.handleKeypress = function(event) {
     //DEBUG this._logStatus( "KEYPRESS" );
     
     // Detect Ctrl+Space
-    if( key === 32 && event.ctrlKey && this._state === "VOID" ) {
+    if( this._triggerKeyMatcher(event) && this._state === "VOID" ) {
 	//Find a proper Template
 	// first from which we can extract a pattern
 	if( this._template === undefined ) {
@@ -405,9 +457,12 @@ Completion.prototype.handleKeyup = function(event) {
     		insertInto( this._areaNode,
 			    str,
 			    pattern.start, curPos, this._template );
+		// save this new content
+		this._widget.saveChanges( this._areaNode.value );
 	    }
-    	    else if( this._bestMatches.length === 1 ) {
-    		//DEBUG console.log( "   > only one" );
+	    // otherwise take the first choice (if exists)
+	    else if( this._bestMatches.length > 0 ) {
+    		//DEBUG console.log( "   > take first one" );
 		var temp = this._bestMatches[0];
 		var str = temp.str;
 		if( this._template.field === "body" ) {
@@ -416,6 +471,8 @@ Completion.prototype.handleKeyup = function(event) {
     		insertInto( this._areaNode,
 			    str,
 			    pattern.start, curPos, this._template );
+		// save this new content
+		this._widget.saveChanges( this._areaNode.value );
 	    }
 	    this._abortPattern( this._popNode );
 		//DEBUG this._logStatus( "" );
@@ -439,7 +496,7 @@ Completion.prototype.handleKeyup = function(event) {
     		// log
 		//DEBUG this._logStatus( pattern.text );
     		// Popup with choices if pattern at least minPatLen letters long
-		if( pattern.text.length > (this._minPatLen-1) ) {
+		if( pattern.text.length > (this._minPatLength-1) ) {
 		    // compute listOptions from templateFilter
 		    var allOptions;
 		    if( this._template )

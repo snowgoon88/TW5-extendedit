@@ -9,6 +9,7 @@ In the `configuration` object you can set :
 * `caseSensitive`: `true`/`false` (is search case sensitive ?)
 * `maxMatch` : an `integer` (max number of match displayed)
 * `minPatLength` : an `integer` (minimal length of a pattern to trigger completion search)
+* `triggerKeyCombination ` : a `string` representing the key combination that triggers the autocompletion popup. To use modifier keys in your combination, use following conversions : `ctrl` -> `^`, `alt` -> `!`, `shift` -> `+`. Note: ` ` (literally a whitespace) represents the `space` key.
 
 In the `template` array you can specify the various completion templates that will be used. Every template can have the following members.
 
