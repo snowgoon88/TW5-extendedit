@@ -26,7 +26,8 @@ One can have many `elements' in the template array.
   "configuration": {
       "caseSensitive" : false,
       "maxMatch" : 8,
-      "minPatLength" : 2
+      "minPatLength" : 2,
+      "triggerKeyCombination" : "^ "
   },
   "template": [{
       "pattern": "[[",
@@ -50,7 +51,7 @@ TODO : CHECK if needed
 var getCaretCoordinates = require("$:/plugins/snowgoon88/edit-comptext/cursor-position.js");
 
 /** Default Completion Attributes */
-var DEFATT = { maxMatch: 5, minPatLen: 2, caseSensitive: false, triggerKeyCombination: "^ " };
+var DEFATT = { maxMatch: 5, minPatLength: 2, caseSensitive: false, triggerKeyCombination: "^ " };
 
 /** 
  * Struct for generic Completion Templates.
@@ -135,7 +136,7 @@ var keyMatchGenerator = function(combination) {
     /** Param */
     // maximum nb of match displayed
     this._maxMatch     = param.configuration.maxMatch || DEFATT.maxMatch;   
-    this._minPatLen    = param.configuration.minPatLen || DEFATT.minPatLen;
+    this._minPatLength = param.configuration.minPatLength || DEFATT.minPatLength;
     this._caseSensitive= param.configuration.caseSensitive || DEFATT.caseSensitive;
     this._triggerKeyMatcher = keyMatchGenerator(param.configuration.triggerKeyCombination || DEFATT.triggerKeyCombination);
     /** Input information */
@@ -495,7 +496,7 @@ Completion.prototype.handleKeyup = function(event) {
 		this._idxChoice = -1;
     		// log
 		//DEBUG this._logStatus( pattern.text );
-    		// Popup with choices if pattern at least minPatLen letters long
+    		// Popup with choices if pattern at least minPatLength letters long
 		if( pattern.text.length > (this._minPatLength-1) ) {
 		    // compute listOptions from templateFilter
 		    var allOptions;
