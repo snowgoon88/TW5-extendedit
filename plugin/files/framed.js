@@ -20,7 +20,7 @@ var COMPLETION_OPTIONS = "$:/plugins/snowgoon88/edit-comptext/config";
 var Completion = require("$:/plugins/snowgoon88/edit-comptext/completion.js").Completion;
 	
 function FramedCompEngine(options) {
-       console.log( "==FramedCompEngine::creation" );
+       //DEBUG console.log( "==FramedCompEngine::creation" );
 	// Save our options
 	options = options || {};
 	this.widget = options.widget;
@@ -98,8 +98,9 @@ function FramedCompEngine(options) {
 	// add Completion popup
     this._completion = new Completion( this.widget, this.domNode, this._configOptions, this.dummyTextArea, this.iframeNode.offsetTop, this.iframeNode.offsetLeft );
 	// print iframe offset
-	console.log( "  __iframe.offsetLeft: "+this.iframeNode.offsetLeft );
-	console.log( "  __iframe.offsetTop: "+this.iframeNode.offsetTop );
+	//DEBUG console.log( "  __iframe.offsetLeft: "+this.iframeNode.offsetLeft );
+    //DEBUG console.log( "  __iframe.offsetTop: "+this.iframeNode.offsetTop );
+    
 	// Copy all styles from dummyCompletion
 	//$tw.utils.copyStyles(this._dummyCompletion._popNode, this._completion._popNode);
 	// Override the ones that should not be set the same as the dummy textarea
@@ -181,7 +182,7 @@ FramedCompEngine.prototype.focus  = function() {
 Handle a dom "input" event which occurs when the text has changed
 */
 FramedCompEngine.prototype.handleInputEvent = function(event) {
-        console.log( "__framed.js::handleInputEvent");
+        //DEBUG console.log( "__framed.js::handleInputEvent");
 	this.widget.saveChanges(this.getText());
 	this.fixHeight();
 	return true;
