@@ -13,12 +13,21 @@ type: application/json
       "filter": "[all[tiddlers]!is[system]]",
       "start": "[[",
       "end": "]]"
-      },{
+      },
+      {
+      "pattern": "||",
+      "filter": "[all[tiddlers]!is[system]]",
+      "start": "[[|",
+      "end": "]]",
+      "startOffset" : 2
+      },
+      {
       "pattern": "<p",
       "filter": "[tag[PNJ]!is[system]]",
       "start": "<<pnjin  \"",
       "end": "\">>"
-      },{
+      },
+      {
       "pattern": "<<",
       "body": "[tag[$:stamp]]",
       "mask" : "$:/config/stamp/",
