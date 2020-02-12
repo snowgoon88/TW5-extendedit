@@ -15,6 +15,19 @@ The basic and default usage. Completion is triggered by `[[`, the search is amon
 }	     
 ```
 
+!! Link Completion and reposition to add Alias
+Another basic usage. Completion is triggered by `||`, the search is among all non-system tiddlers. When selected, the `title` of the tiddler is inserted in the text, surrounded by `[[|` and `]]`. The cursor is positionned just before the `|`, ready for typing an Alias.
+
+```
+{
+      "pattern": "||",
+      "filter": "[all[tiddlers]!is[system]]",
+      "start": "[[|",
+      "end": "]]",
+      "startOffset" : 2
+      }
+
+```
 
 !! Special macro completion
 I have a 'pnjin' macro that is invoked by `<<pnjin "TiddlerPNJName">>` where 'TiddlerPNJName is a tiddler that hold data about a PNJ. I use tiddlywiki to organise my Role Playing Games campaigns. So, I want `<p` to trigger the completion. The search is among all non-system tiddlers tagged `PNJ` and, once selected, the title of the tiddler must be inserted surrouned by `<<pnjin \"` and `\">>`. So...

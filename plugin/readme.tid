@@ -7,8 +7,8 @@ This plugin adds ''completion'' when editing the body of a tiddler.
 * A list of tiddlers with a title that matches the pattern between `[[` and cursor appears
 * `UP/DOWN` keys can select a tiddler, `ENTER` to validate
 * If there is only one match, `ENTER` selects it.
-* `NEW` : you can specify you own trigger pattern and the list of possible completions. See [[$:/plugins/snowgoon88/edit-comptext/usage]] for more details.
-
+* you can specify you own trigger pattern and the list of possible completions. See [[$:/plugins/snowgoon88/edit-comptext/usage]] for more details.
+* `NEW` : after completion, the cursor can be set inside the inserted text. This allows for easier creation of "aliased links" (try completion with `||` for example).
 
 !! To try it or get the latest news
 See [[http://snowgoon88.github.io/TW5-extendedit]]

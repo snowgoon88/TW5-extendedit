@@ -3,7 +3,7 @@ TW5-extendedit
 
 Plugin to extend the editor of TiddlyWiki5 with 'link completion'.
 
-:zap: **NEW** :zap: configure your trigger keys (thanks [zimiarh](https://github.com/zimiarh) )
+:zap: **NEW** :zap: can use '||' trigger in order to create Links with Alias.
 
 **Try it** at http://snowgoon88.github.io/TW5-extendedit
 
@@ -31,7 +31,9 @@ Dev
 
 Older Stuff
 -----------
+* 12/02/2010 : v0.8.1 fix small bug (minPatLength)
 * 10/06/2018 : v0.8.0 config triggerKeys and FIX partial completion
+  * (thanks to [zimiarh](https://github.com/zimiarh) )
 * 28/05/2017 : v0.7.0 compatible with toolbar text editor
   * available at http://snowgoon88.github.io/TW5-extendedit/index_5.1.13.html
 * 04/05/2016 : v0.6.1 self-sufficient module, use of body of tiddlers

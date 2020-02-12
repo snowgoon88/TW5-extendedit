@@ -61,14 +61,15 @@ var DEFATT = { maxMatch: 5, minPatLength: 2, caseSensitive: false, triggerKeyCom
  * <li>mask: replaced by "" when presenting completion options</li>
  * </ul>
  */
-var Template = function( pat, filter, mask, field, start, end  ) {
+    var Template = function( pat, filter, mask, field, start, end, startOffset  ) {
     this.pat = pat;
-    this.filter = filter;
+        this.filter = filter;
     this.mask = "^"+regExpEscape(mask);
     this.field = field;
     this.start = start;
     this.end = end;
-    this.pos = 0;
+        this.pos = 0;
+        this.startOffset  = startOffset;
 };
 /**
  * Struct for storing completion options, as we need to memorise 
@@ -156,7 +157,8 @@ var keyMatchGenerator = function(combination) {
     		    new Template( temp.pattern, temp.body,
 				  temp.mask ? temp.mask : "",
 				  "body",
-    				  temp.start, temp.end )
+    				  temp.start, temp.end,
+                                temp.startOffset)
     		);
 	    }
 	    else {
@@ -165,7 +167,8 @@ var keyMatchGenerator = function(combination) {
 				  temp.title ? temp.title : temp.filter,
 				  temp.mask ? temp.mask : "",
 				  "title",
-    				  temp.start, temp.end )
+    				  temp.start, temp.end,
+                                temp.startOffset )
     		);
 	    }
 	    //DEBUG temp = this._listTemp[this._listTemp.length-1];
@@ -614,7 +617,16 @@ var insertInto = function(node, text, posBefore, posAfter, template ) {
     // i.e. could use widget.updateEditor(newVal) from edit-comptext widget.
     //      but how to be sure that cursor is well positionned ?
     node.value = newVal;
-    node.setSelectionRange(posBefore+text.length+sStart.length+sEnd.length, posBefore+text.length+sStart.length+sEnd.length );
+
+    // if startOffset in Template, set cursor at beginning of inserted value,
+    // with an Offset (usefull for aliasing links)
+    if (template.startOffset) {
+        let cursorPos = posBefore+template.startOffset;
+        node.setSelectionRange( cursorPos, cursorPos );
+    }
+    else {
+        node.setSelectionRange(posBefore+text.length+sStart.length+sEnd.length, posBefore+text.length+sStart.length+sEnd.length );
+    }
 };
 /**
  * Add an '\' in front of -\^$*+?.()|[]{}
