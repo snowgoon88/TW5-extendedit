@@ -13,6 +13,13 @@ title: $:/plugins/snowgoon88/edit-comptext/config
       "filter": "[all[tiddlers]!is[system]]",
       "start": "[[",
       "end": "]]"
+      },
+      {
+      "pattern": "||",
+      "filter": "[all[tiddlers]!is[system]]",
+      "start": "[[|",
+      "end": "]]",
+      "startOffset" : 2
       }
   ]
 }

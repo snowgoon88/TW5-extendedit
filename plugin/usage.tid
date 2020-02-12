@@ -17,6 +17,7 @@ In the `template` array you can specify the various completion templates that wi
 * `title` or `body`: `string` (the filter operators that gives the list of valid completions, default "[all[tiddlers]!is[system]]"). If you specify `body`, then the body of the tiddler will be inserted on selection.
 * `start` : `string` (when completion is chosen, start is put before the completion, default "[[")
 * `end` : `string` (when completion is chosen, end is put after the completion, default "]]")
+* `startOffset` : `interger` but OPTIONNAL. If provided, the cursor will be positionned `startOffsetè characters after the beginning of the completed text. This is useful to create aliased links using "||" as a trigger.
 
 !! Current body of Config Tiddler
 
