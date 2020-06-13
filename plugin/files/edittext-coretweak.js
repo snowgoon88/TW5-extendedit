@@ -24,7 +24,7 @@ exports.prototype = {};
 
 exports.prototype.render = function(parent,nextSibling) {
 	Object.getPrototypeOf(Object.getPrototypeOf(this)).render.call(this,parent,nextSibling);
-	if(this.editorType === "text" || this.editorType === "comptext") {
+	if(this.editorType === "text") {
 		var editTextWidget = this.children[0];
 		var COMPLETION_OPTIONS = "$:/plugins/snowgoon88/edit-comptext/config";
 		editTextWidget._configOptions = $tw.wiki.getTiddlerData( COMPLETION_OPTIONS, {} );
@@ -37,5 +37,3 @@ exports.prototype.render = function(parent,nextSibling) {
 };
 
 })();
-
-//subclass this as comptext for backwards compat
