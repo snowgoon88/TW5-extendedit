@@ -15,6 +15,13 @@
 				  "module-type": "library"
 			}
 		},{
+			"file": "edittext-coretweak.js",
+			"fields": {
+				  "type": "application/javascript",
+				  "title": "$:/plugins/snowgoon88/edit-comptext/edittext-coretweak.js",
+				  "module-type": "widget-subclass"
+			}
+		},{
 			"file": "cursor-position.js",
 			"fields": {
 				  "type": "application/javascript",
