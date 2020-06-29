@@ -9,6 +9,7 @@ This plugin adds ''completion'' when editing the body of a tiddler.
 * If there is only one match, `ENTER` selects it.
 * you can specify you own trigger pattern and the list of possible completions. See [[$:/plugins/snowgoon88/edit-comptext/usage]] for more details.
 * `NEW` : after completion, the cursor can be set inside the inserted text. This allows for easier creation of "aliased links" (try completion with `||` for example).
+* `NEW` : version 0.9.1 and higher, the default TW5 editor automatically has autocompletion as soon as the plugin is enabled (if TW5 version 5.1.22 or higher)
 
 !! To try it or get the latest news
 See [[http://snowgoon88.github.io/TW5-extendedit]]
@@ -19,7 +20,7 @@ To add the plugin to your own TiddlyWiki5, just drag this link to the browser wi
 
 [[$:/plugins/snowgoon88/edit-comptext]]
 
-Sometime, a small configuration step is then needed
+Sometime (prior to TW5.1.22), a small configuration step is then needed
 
 in `$:/ControlPanel -> Advanced -> Editor Type -> text/vnd.tiddlywiki` you must chose `comptext` instead of `text`.
 

@@ -9,9 +9,9 @@ Plugin to extend the editor of TiddlyWiki5 with 'link completion'.
 
 **Upload it** from http://snowgoon88.github.io/TW5-extendedit
 
-**Config** Then, in `$:/ControlPanel -> Advanced -> Editor Type -> text/vnd.tiddlywiki` you must chose **comptext** instead of **text**.
+**Config** :zap: **NEW** :zap: nothing to do, autocompletion works as soon the plugin is enabled.
 
-Reload and « voilà »...
+For older version of TW5 - prior to v5.1.22 -, you still must explicitely use the comptext editor. => In `$:/ControlPanel -> Advanced -> Editor Type -> text/vnd.tiddlywiki` you must chose **comptext** instead of **text**. Reload and « voilà »...
 
 Dev
 ---
@@ -28,10 +28,12 @@ Dev
 
 ### Contributors
 * [zimiarh](https://github.com/zimiarh)
+* [saqiùtiaz](https://github.com/saqimtiaz)
 
 Older Stuff
 -----------
-* 12/02/2010 : v0.8.1 fix small bug (minPatLength)
+* 29/06/2020 : v0.9 default editor in TW5 now automatically has autocompletion
+* 12/02/2018 : v0.8.1 fix small bug (minPatLength)
 * 10/06/2018 : v0.8.0 config triggerKeys and FIX partial completion
   * (thanks to [zimiarh](https://github.com/zimiarh) )
 * 28/05/2017 : v0.7.0 compatible with toolbar text editor
