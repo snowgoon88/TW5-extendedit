@@ -135,9 +135,15 @@ var keyMatchGenerator = function(combination) {
     this._bestMatches = []; // An array of OptCompletion
     this._idxChoice = -1;
     /** Param */
-    // maximum nb of match displayed
+            // maximum nb of match displayed
+            //DEBUG console.log( "__PARAM" );
+            //DEBUG console.log( param.configuration );
     this._maxMatch     = param.configuration.maxMatch || DEFATT.maxMatch;   
-    this._minPatLength = param.configuration.minPatLength || DEFATT.minPatLength;
+            // Beware that a (0 || 2) gives 2 !, so change way attributs are checked.
+            this._minPatLength = DEFATT.minPatLength;
+            if ('minPatLength' in param.configuration) {
+                this._minPatLength = param.configuration.minPatLength;
+            }
     this._caseSensitive= param.configuration.caseSensitive || DEFATT.caseSensitive;
     this._triggerKeyMatcher = keyMatchGenerator(param.configuration.triggerKeyCombination || DEFATT.triggerKeyCombination);
     /** Input information */
@@ -498,9 +504,12 @@ Completion.prototype.handleKeyup = function(event) {
     	    else if( pattern ) { // pattern changed by keypressed
 		this._idxChoice = -1;
     		// log
+                //DEBUG console.log( "  PATTERN changed" );
 		//DEBUG this._logStatus( pattern.text );
+                //DEBUG console.log( "  pat.length",pattern.text.length, " min",this._minPatLength);
     		// Popup with choices if pattern at least minPatLength letters long
 		if( pattern.text.length > (this._minPatLength-1) ) {
+                    //DEBUG console.log( "  should compute" );
 		    // compute listOptions from templateFilter
 		    var allOptions;
 		    if( this._template )

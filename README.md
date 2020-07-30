@@ -28,7 +28,7 @@ Dev
 
 ### Contributors
 * [zimiarh](https://github.com/zimiarh)
-* [saqiùtiaz](https://github.com/saqimtiaz)
+* [saqimtiaz](https://github.com/saqimtiaz)
 
 Older Stuff
 -----------
