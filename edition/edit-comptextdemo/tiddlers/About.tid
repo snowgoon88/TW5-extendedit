@@ -10,7 +10,8 @@ In editarea of the 'text' field, some ''trigger pattern'' (by default `[[`) ente
 * when a popup window is visible, UP/DOWN allow to choose a link that is selected with ENTER.
 * CTRL+SPACE takes you into completion mode (if possible)
 * ESC takes you out of completion mode
-* you can use BACKSPACE, DEL, LEFT, RIGHT when in completion mode. 
+* you can use BACKSPACE, DEL, LEFT, RIGHT when in completion mode.
+* you can also click or touch to select a completion choice
 
 In this new version, you can define your own 'completion template'. See [[$:/plugins/snowgoon88/edit-comptext/usage]] and [[$:/plugins/snowgoon88/edit-comptext/examples]] 
 
