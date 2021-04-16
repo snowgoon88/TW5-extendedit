@@ -418,8 +418,8 @@ Completion.prototype.handleKeyup = function(event) {
     var key = event.keyCode;
     
     //DEBUG console.log( "__KEYUP ("+key+") hasI="+this._hasInput );
-    
-    // ESC
+
+  // ESC
     if( key === 27 ) {
 	this._abortPattern( this._popNode );
 	//DEBUG this._logStatus( "" );
@@ -460,7 +460,13 @@ Completion.prototype.handleKeyup = function(event) {
     	    if( selected ) {
     		//DEBUG console.log( "   > selected" );
 		var temp = this._bestMatches[this._idxChoice];
-		var str = temp.str;
+	      var str = temp.str;
+              // if str is "<hr>" or "...", abort
+              if (str === "<hr>" || str === "...") {
+                this._abortPattern( this._popNode );
+                this._areaNode.focus();
+                return;
+              }
 		if( this._template.field === "body" ) {
 		    str = $tw.wiki.getTiddlerText( temp.title );
 		}
@@ -474,7 +480,13 @@ Completion.prototype.handleKeyup = function(event) {
 	    else if( this._bestMatches.length > 0 ) {
     		//DEBUG console.log( "   > take first one" );
 		var temp = this._bestMatches[0];
-		var str = temp.str;
+	      var str = temp.str;
+              // if str is "<hr>" or "...", abort
+              if (str === "<hr>" || str === "...") {
+                this._abortPattern( this._popNode );
+                this._areaNode.focus();
+                return;
+              }
 		if( this._template.field === "body" ) {
 		    str = $tw.wiki.getTiddlerText( temp.title );
 		}
@@ -520,12 +532,25 @@ Completion.prototype.handleKeyup = function(event) {
     		    this._popNode.innerHTML = "";
     		    //console.log( "BC "+ this._pattern + " => " + choice );
     		    if (this._bestMatches.length > 0) {
-			for( var i=0; i<this._bestMatches.length; i++) {
-    			    this._popNode.appendChild( 
-				itemHTML(this._bestMatches[i].str,
-					 pattern.text));
-    			}
-			this._display( this._areaNode, this._popNode );			
+		      for( var i=0; i<this._bestMatches.length; i++) {
+                        let li_elem = itemHTML(this._bestMatches[i].str,
+					       pattern.text);
+                        // pass this as comp to eventHandler
+                        li_elem.addEventListener( "click",
+                                                  function( idx, event) {
+                                                    //DEBUG console.log( "__ITEM Listener", this, idx, event );
+                                                    this.handleItemClik( idx );
+                                                  }.bind(this,i));
+                        li_elem.addEventListener( "touchstart",
+                                                  function( idx, event) {
+                                                    //comp is the completion object, passed using 'bind' 
+                                                    this.handleItemClik( idx );
+                                                  }.bind(this,i));
+                        // li_elem.addEventListener( "click",
+                        //                           this.handleItemClick );
+    			this._popNode.appendChild( li_elem );
+    		      }
+		      this._display( this._areaNode, this._popNode );			
     		    }
 		    else { // no matches
 			this._state = "PATTERN";
@@ -540,6 +565,38 @@ Completion.prototype.handleKeyup = function(event) {
 	// to ensure that one MUST add an input (through onInput())
 	this._hasInput = false;
 };
+// not real event handler as awaits the index of the clicked/touched bestChoice
+Completion.prototype.handleItemClik = function( idx_select) {
+  
+  var curPos = this._areaNode.selectionStart;  // cursor position
+  var val = this._areaNode.value;   // text in the area
+  var pattern = extractPattern( val, curPos, this._template );
+  
+  //DEBUG console.log( "__handleItemClik idx="+idx_select, this );
+  
+  // insert choice into document
+  var temp = this._bestMatches[idx_select];
+  var str = temp.str;
+
+  // if str is "<hr>" or "...", abort
+  if (str === "<hr>" || str === "...") {
+    this._abortPattern( this._popNode );
+    this._areaNode.focus();
+    return;
+  }
+  
+  if( this._template.field === "body" ) {
+    str = $tw.wiki.getTiddlerText( temp.title );
+  }
+  insertInto( this._areaNode,
+	      str,
+	      pattern.start, curPos, this._template );
+  // save this new content
+  this._widget.saveChanges( this._areaNode.value );
+  this._abortPattern( this._popNode );
+  this._areaNode.focus();
+  //DEBUG this._logStatus( "" );
+}
 // **************************************************************************
 // ******************************************************** private functions
 // **************************************************************************
@@ -595,15 +652,17 @@ var extractPattern = function( text, pos, template ) {
  * Returns : list item. 
  * Generates list items with the user’s input highlighted via <mark>.
  */
-var itemHTML = function (text, input ) {
+  var itemHTML = function (text, input) {
     // text si input === ''
     // otherwise, build RegExp that is global (g) and case insensitive (i)
     // to replace with <mark>$&</mark> where "$&" is the matched pattern
-    var html = input === '' ? text : text.replace(RegExp(regExpEscape(input.trim()), "gi"), "<mark>$&</mark>");
-    return create("li", {
-	innerHTML: html,
-	"patt-selected": "false"
-    });
+  var html = input === '' ? text : text.replace(RegExp(regExpEscape(input.trim()), "gi"), "<mark>$&</mark>");
+  // the DOM element created
+  var elem = create("li", {
+    innerHTML: html,
+    "patt-selected": "false",
+  });
+  return elem; 
 };
 /**
  * Insert text into a textarea node, 
