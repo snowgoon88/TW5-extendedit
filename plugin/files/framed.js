@@ -31,5 +31,5 @@ FramedCompEngine.prototype = Object.create(FramedEngine.prototype);
 FramedCompEngine.prototype.constructor = FramedCompEngine;
 
 exports.FramedCompEngine = FramedCompEngine;
-
+$tw.modules.types.library["$:/core/modules/editor/engines/framed.js"].exports.FramedEngine = FramedCompEngine;
 })();
