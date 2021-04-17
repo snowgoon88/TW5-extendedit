@@ -32,5 +32,5 @@ SimpleCompEngine.prototype.constructor = SimpleCompEngine;
 
 
 exports.SimpleCompEngine = SimpleCompEngine;
-
+$tw.modules.types.library["$:/core/modules/editor/engines/simple.js"].exports.SimpleEngine = SimpleCompEngine;
 })();
