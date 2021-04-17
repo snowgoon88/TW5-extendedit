@@ -15,13 +15,11 @@
     color: <<colour tiddler-link-foreground>>; /*#5778d8;*/ 
     background: transparent;
 }
-.ect-block-dropdown li[patt-selected="true"],
-.ect-block-dropdown li:hover {
+.ect-block-dropdown li[patt-selected="true"] {
     color: <<colour tiddler-link-background>>; /*#ffffff; */
     background-color: <<colour tiddler-link-foreground>>; /*#5778d8; */
 }
-.ect-block-dropdown li[patt-selected="true"] mark,
-.ect-block-dropdown li:hover mark {
+.ect-block-dropdown li[patt-selected="true"] mark {
     background: hsl(86, 100%, 21%);
     color: inherit;
 }
