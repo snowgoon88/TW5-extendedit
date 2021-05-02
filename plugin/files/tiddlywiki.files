@@ -5,21 +5,14 @@
 			"fields": {
 				  "type": "application/javascript",
 				  "title": "$:/plugins/snowgoon88/edit-comptext/framed.js",
-				  "module-type": "library"
+				  "module-type": "startup"
 			}
 		},{
 			"file": "simple.js",
 			"fields": {
 				  "type": "application/javascript",
 				  "title": "$:/plugins/snowgoon88/edit-comptext/simple.js",
-				  "module-type": "library"
-			}
-		},{
-			"file": "edittext-coretweak.js",
-			"fields": {
-				  "type": "application/javascript",
-				  "title": "$:/plugins/snowgoon88/edit-comptext/edittext-coretweak.js",
-				  "module-type": "widget-subclass"
+				  "module-type": "startup"
 			}
 		},{
 			"file": "cursor-position.js",

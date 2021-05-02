@@ -120,6 +120,16 @@ var keyMatchGenerator = function(combination) {
 	var Completion = function( editWidget, areaNode, param, sibling, offTop, offLeft ) {
 	console.log( "==Completion::creation" );
 
+	//check if the widget uses the framed engine
+	if(typeof sibling !== 'undefined') {
+		//The framed engine propagates all keydown events to the parent document
+		//Disable this and only propagate keydown events not handled by the autocompletion in our handleKeydown method
+		editWidget._original_handleKeydownEvent = editWidget.handleKeydownEvent;
+		editWidget.handleKeydownEvent = function(event) {
+			return false;
+		};
+	}
+
     // About underlying Widget
     this._widget = editWidget;
 	this._areaNode = areaNode;
@@ -349,15 +359,20 @@ Completion.prototype.handleKeydown = function(event) {
     	event.stopPropagation();
     }
     // ESC while selecting
-    if( (this._state === "PATTERN" || this._state === "SELECT") && key === 27 ) {
+    else if( (this._state === "PATTERN" || this._state === "SELECT") && key === 27 ) {
     	event.preventDefault();
     	event.stopPropagation();
     }
     // UP/DOWN while a pattern is extracted
-    if( (key===38 || key===40) && 
+    else if( (key===38 || key===40) && 
 	(this._state === "PATTERN" || this._state === "SELECT") ) {
-	event.preventDefault();
-    }
+		event.preventDefault();
+    } else {
+		//If we have not handled the keydown event, allow the widget to propagate it to the parent document
+		if(this._widget._original_handleKeydownEvent) {
+			this._widget._original_handleKeydownEvent(event);
+		}
+	}
 };
 /**
  * Means that something has been added/deleted => set _hasInput
@@ -546,6 +561,12 @@ Completion.prototype.handleKeyup = function(event) {
                                                     //comp is the completion object, passed using 'bind' 
                                                     this.handleItemClik( idx );
                                                   }.bind(this,i));
+                        li_elem.addEventListener( "mouseover",
+                                                  function( idx, event) {
+                                                    this._goto( this._popNode,
+                                                                idx );
+                                                  }.bind(this,i));
+                        
                         // li_elem.addEventListener( "click",
                         //                           this.handleItemClick );
     			this._popNode.appendChild( li_elem );
