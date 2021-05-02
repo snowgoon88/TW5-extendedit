@@ -561,6 +561,12 @@ Completion.prototype.handleKeyup = function(event) {
                                                     //comp is the completion object, passed using 'bind' 
                                                     this.handleItemClik( idx );
                                                   }.bind(this,i));
+                        li_elem.addEventListener( "mouseover",
+                                                  function( idx, event) {
+                                                    this._goto( this._popNode,
+                                                                idx );
+                                                  }.bind(this,i));
+                        
                         // li_elem.addEventListener( "click",
                         //                           this.handleItemClick );
     			this._popNode.appendChild( li_elem );
