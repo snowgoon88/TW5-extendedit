@@ -6,6 +6,7 @@ This plugin adds ''completion'' when editing the body of a tiddler.
 * Enter completion-mode by typing `[[` or `CTRL+SPACE`
 * A list of tiddlers with a title that matches the pattern between `[[` and cursor appears
 * `UP/DOWN` keys can select a tiddler, `ENTER` to validate
+* `NEW` : can click with mouse or touch surface to select your completion.
 * If there is only one match, `ENTER` selects it.
 * you can specify you own trigger pattern and the list of possible completions. See [[$:/plugins/snowgoon88/edit-comptext/usage]] for more details.
 * `NEW` : after completion, the cursor can be set inside the inserted text. This allows for easier creation of "aliased links" (try completion with `||` for example).

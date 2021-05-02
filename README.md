@@ -32,7 +32,7 @@ Dev
 
 Older Stuff
 -----------
-* 16/16/2021 : v0.9.2 with click/touch selection
+* 16/04/2021 : v0.9.3 with click/touch selection
 * 29/06/2020 : v0.9 default editor in TW5 now automatically has autocompletion
   * can use '||' trigger in order to create Links with Alias.
 * 12/02/2018 : v0.8.1 fix small bug (minPatLength)

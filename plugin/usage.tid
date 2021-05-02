@@ -1,6 +1,8 @@
 title: $:/plugins/snowgoon88/edit-comptext/usage
 
-''Important'' : be sure that in `$:/ControlPanel -> Advanced -> Editor Type -> text/vnd.tiddlywiki` you have chosen `comptext` instead of `text`.
+Now, this plugin should be automatically integrated in the common editors.
+
+In some older version of Tiddlywiki, you might have to change things in `$:/ControlPanel -> Advanced -> Editor Type -> text/vnd.tiddlywiki` to put `comptext` instead of `text`.
 
 Configuration of the edit-comptext plugin can be done through the tiddler [[$:/plugins/snowgoon88/edit-comptext/config]]. Use a JSON tiddler (do not forget to set the type to `application/json`. See some examples at [[$:/plugins/snowgoon88/edit-comptext/examples]]
 
